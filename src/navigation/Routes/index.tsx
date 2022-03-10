@@ -31,7 +31,7 @@ function Routes() {
         initialRouteName="Home"
         screenOptions={({route}) => ({
           tabBarIcon: ({focused, color, size}) => {
-            let iconName: string = 'Home';
+            let iconName: string = 'Output';
 
             if (route.name === 'Home') {
               iconName = focused ? 'ios-bus' : 'ios-bus-outline';
@@ -45,8 +45,8 @@ function Routes() {
           tabBarActiveTintColor: colorlist.primarySoft,
           tabBarInactiveTintColor: 'gray',
         })}>
-        <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Output" component={OutputPage} />
+        <Tab.Screen name="Home" component={HomeScreen} />
       </Tab.Navigator>
     </NavigationContainer>
   );
