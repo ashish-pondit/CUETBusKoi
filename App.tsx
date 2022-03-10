@@ -1,4 +1,6 @@
 import React from 'react';
+import BusButton from './src/component/BusButton';
+import BusList from './src/screens/BusList';
 import {
   SafeAreaView,
   ScrollView,
@@ -20,7 +22,9 @@ import {
 const App = () => {
   return (
     <View style={styles.continer}>
-      <Text>Hello Cuet Bus</Text>
+      <BusList/>
+      {/* <BusButton title={'hello there মাতামুহুরি'}/> */}
+      {/* <Text>Hello Cuet Bus</Text> */}
     </View>
   );
 };
