@@ -7,6 +7,7 @@ import { StyleSheet,
     FlatList,
     Alert } from "react-native";
 import BusButton from "../component/BusButton";
+
 const DATA = [
     {
         'id': 1,
@@ -38,7 +39,7 @@ const DATA = [
     },
     {
         'id': 8,
-        'busName': "কুশিয়ারা", 
+        'busName': "বুড়িগঙ্গা", 
     },
 
 ]
@@ -49,14 +50,14 @@ const BusList = () => {
     return (
         <SafeAreaView>
             <FlatList
-            data={DATA}
-            renderItem={({item}) => (
-                <View>
-                    <BusButton title={item.busName}/>
-                </View>
-              )}
-            numColumns={2}
-            keyExtractor={item => item.id}
+                data={DATA}
+                renderItem={({item}) => (
+                    <View style={styles.container}>
+                        <BusButton title={item.busName}/>
+                    </View>
+                )}
+                numColumns={2}
+                keyExtractor={item => item.id}
             />
         </SafeAreaView>
     )   
@@ -66,12 +67,12 @@ export default BusList;
 
 const styles = StyleSheet.create({
     container: {
-        padding: 10,
-        margin: 5,
-        alignments: 'right',
-        fontSize: 20,
-        justifyContent: 'center',
-        backgroundColor: 'black'
+        flex: 1, 
+        margin: 3,
+        fontSize: 50,
+        flexDirection: 'column'
+        
+        
     },
     containerStyle: {
         fontSize: 30,

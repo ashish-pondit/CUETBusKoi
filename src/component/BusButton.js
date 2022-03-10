@@ -4,13 +4,23 @@ import {
     Text,
     StyleSheet,
     Button,
-    TextComponent
+    Pressable,
+    TextComponent,
+    TextPropTypes,
+    Alert
 } from "react-native";
 
 const BusButton = ({title}) => {
     return (
-            <Button containerStyle={styles.containerStyle}  title={title} 
-            onPress={() => alert("Test Alert!!")}/>
+            // <Pressable style={styles.buttonStyle} onPress={() => alert("Test Alert!!")}>
+            //     <Text style={styles.text}>{title}</Text>
+            // </Pressable>
+            <Button
+                // </Button>styles={styles.buttonStyle}
+                
+                title={title}
+                onPress={ () => alert("Hello there, " + title)}
+             />
     )
 }
 export default BusButton;
@@ -24,8 +34,17 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: 'black'
     },
-    containerStyle: {
-        fontSize: 30,
-        backgroundColor: 'black'
+    buttonStyle: {
+        fontSize: 100,
+        height: 100,
+        backgroundColor: '#f9f4e6',
+        borderRadius: 4
+        
+    }, 
+    text: {
+        color: '#4d0000',
+        fontWeight: 'bold',
+        justifyContent: 'center'
     }
+
 })
