@@ -1,10 +1,9 @@
 import * as React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+// import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-
-import Icon from 'react-native-vector-icons/FontAwesome';
+import colorlist from '../../config/colorlist';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 const Tab = createBottomTabNavigator();
 
@@ -25,8 +24,6 @@ function OutputPage() {
   );
 }
 
-const Stack = createNativeStackNavigator();
-
 function Routes() {
   return (
     <NavigationContainer>
@@ -45,19 +42,10 @@ function Routes() {
             // You can return any component that you like here!
             return <Ionicons name={iconName} size={size} color={color} />;
           },
-          tabBarActiveTintColor: 'tomato',
+          tabBarActiveTintColor: colorlist.primarySoft,
           tabBarInactiveTintColor: 'gray',
         })}>
-        <Tab.Screen
-          name="Home"
-          component={HomeScreen}
-          // options={{
-          //   tabBarIcon: ({focused}) => {
-          //     // You can return any component that you like here
-          //     return <Ionicons name="ios-list" size={25} />;
-          //   },
-          // }}
-        />
+        <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Output" component={OutputPage} />
       </Tab.Navigator>
     </NavigationContainer>
