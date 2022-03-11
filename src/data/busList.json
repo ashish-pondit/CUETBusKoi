@@ -2,35 +2,43 @@
     "busData" : [
         {
             "id": 1,
-            "busName": "মাতামুহুরি"
+            "busName": "মাতামুহুরি",
+            "location": "Gec Mor"
         },
         {
             "id": 2,
-            "busName": "সুরমা"
+            "busName": "সুরমা",
+            "location": "New Market"
         },
         {
             "id": 3,
-            "busName": "হালদা"
+            "busName": "হালদা",
+            "location": "Lalkhan Bazar"
         },
         {
             "id": 4,
-            "busName": "পদ্মা"
+            "busName": "পদ্মা",
+            "location": "Finlay Square"
         },
         {
             "id": 5,
-            "busName": "মেঘনা"
+            "busName": "মেঘনা",
+            "location": "Rastar Matha"
         },
         {
             "id": 6,
-            "busName": "যমুনা"
+            "busName": "যমুনা",
+            "location": "Kodomtoli"
         },
         {
             "id": 7,
-            "busName": "ব্রহ্মপুত্র"
+            "busName": "ব্রহ্মপুত্র",
+            "location": "Kuaish"
         },
         {
             "id": 8,
-            "busName": "বুড়িগঙ্গা"
+            "busName": "বুড়িগঙ্গা",
+            "location": "Bahaddarhat"
         }
     ]
 }

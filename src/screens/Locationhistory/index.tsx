@@ -1,21 +1,31 @@
 import * as React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import BusLocationCard from '../../component/BusLocationCard';
-import {colorList} from '../../config';
+import { busData } from '../../data/busList.json';
+import { colorList } from '../../config';
+import Buslocationlist from '../../component/Buslocationlist';
 
 function Locationhistory() {
-  return (
-    <View style={styles.container}>
-      <BusLocationCard />
-    </View>
-  );
+    function busList(data: any) {
+        let buslocationList = [];
+        for (let i = 0; i < data.length; i++) {
+            buslocationList.push(<BusLocationCard busInfo={data[i]} />);
+        }
+        return buslocationList;
+    }
+    // busData[0]
+    return (
+        <View style={styles.container}>
+            <ScrollView>{busList(busData)}</ScrollView>
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colorList.secondary,
-  },
+    container: {
+        flex: 1,
+        backgroundColor: colorList.secondary,
+    },
 });
 
 export default Locationhistory;

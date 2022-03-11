@@ -11,11 +11,10 @@ import {
 } from 'react-native';
 
 interface BusButtonprops {
-    title: string
+    title: string;
 }
 
-const BusButton= ({title}:BusButtonprops) => {
-    console.log(title)
+const BusButton = ({ title }: BusButtonprops) => {
     return (
         // <Pressable style={styles.buttonStyle} onPress={() => alert("Test Alert!!")}>
         //     <Text style={styles.text}>{title}</Text>

@@ -1,87 +1,90 @@
 import React from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  useColorScheme,
-  View,
+    SafeAreaView,
+    ScrollView,
+    StatusBar,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    useColorScheme,
+    View,
 } from 'react-native';
 
-import {busData} from '../../data/busList.json';
-import {spacing, fontConfig, colorList} from '../../config';
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import { spacing, fontConfig, colorList } from '../../config';
+import Icon from 'react-native-vector-icons/Entypo';
 
-const BusLocationCard = ({}) => {
-  return (
-    <View style={styles.continer}>
-      <View style={styles.containerText}>
-        <Text style={styles.busNameTxt}>{busData[7].busName}</Text>
-        <View style={styles.containerLoc}>
-          <Text style={styles.locationTxt}>GEC More</Text>
-          <Text style={styles.updateTimeTxt}>Updated: 2 min ago</Text>
+interface BusinfoProps {
+    busInfo: { id: number; busName: string; location: string };
+}
+
+const BusLocationCard = ({ busInfo }: BusinfoProps) => {
+    console.log(busInfo);
+    return (
+        <View style={styles.continer}>
+            <TouchableOpacity style={styles.containerText}>
+                <Text style={styles.busNameTxt}>{busInfo.busName}</Text>
+                <View style={styles.containerLoc}>
+                    <Text style={styles.locationTxt}>{busInfo.location}</Text>
+                    <Text style={styles.updateTimeTxt}>Updated: 2 min ago</Text>
+                </View>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.locationIconBox}>
+                <Icon
+                    name="location"
+                    size={35}
+                    color={colorList.primaryXsoft}
+                />
+            </TouchableOpacity>
         </View>
-      </View>
-      <TouchableOpacity style={styles.locationIconBox}>
-        <Icon name="map-marked" size={40} color="#900000" />
-      </TouchableOpacity>
-    </View>
-  );
+    );
 };
 
 const styles = StyleSheet.create({
-  continer: {
-    // width: '100%',
-    flexDirection: 'row',
-    // justifyContent: 'center',
-    // alignItems: 'center',
-    borderWidth: 1,
-    // backgroundColor: 'green',
-    margin: spacing.md,
-    borderRadius: spacing.md,
-    padding: spacing.md,
-  },
-  containerText: {
-    flexDirection: 'row',
-    // alignItems: 'center',
-    justifyContent: 'flex-start',
-    // backgroundColor: 'blue',
-    // margin: spacing.md,
-    borderRadius: spacing.md,
-    flex: 1,
-    // height: 100,
-  },
-  containerLoc: {
-    flexDirection: 'column',
-    // alignItems: 'center',
-    marginRight: spacing.lg,
-    // flex: 1,
-    // backgroundColor: 'blue',
-    // justifyContent: 'center',
-  },
-  busNameTxt: {
-    fontSize: fontConfig.xlg,
-    color: 'black',
-    marginRight: spacing.xlg,
-  },
-  locationTxt: {
-    fontSize: fontConfig.lg,
-    color: 'black',
-  },
-  updateTimeTxt: {
-    fontSize: fontConfig.sm,
-    color: colorList.darkSoft,
-    textAlign: 'left',
-  },
-  locationIconBox: {
-    // backgroundColor: 'blue',
-    // padding: spacing.md,
-    alignItems: 'center',
-    justifyContent: 'center',
-    // backgroundColor: 'yellow',
-  },
+    continer: {
+        flexDirection: 'row',
+        marginLeft: spacing.lg,
+        marginRight: spacing.lg,
+        borderRadius: spacing.sm,
+        padding: spacing.md,
+        elevation: spacing.md,
+        backgroundColor: colorList.primaryXsoft,
+        shadowOffset: { width: 1, height: 1 },
+        shadowColor: 'black',
+        shadowOpacity: 0.5,
+        shadowRadius: 2,
+        marginVertical: 10,
+    },
+    containerText: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        flex: 1,
+    },
+    containerLoc: {
+        flexDirection: 'column',
+        marginRight: spacing.lg,
+    },
+    busNameTxt: {
+        fontSize: fontConfig.lg,
+        color: colorList.primary,
+        marginRight: spacing.md,
+        minWidth: '25%',
+    },
+    locationTxt: {
+        fontSize: fontConfig.lg,
+        color: colorList.primary,
+    },
+    updateTimeTxt: {
+        fontSize: fontConfig.sm,
+        color: colorList.darkSoft,
+        textAlign: 'left',
+    },
+    locationIconBox: {
+        alignSelf: 'center',
+        borderWidth: 0.3,
+        borderRadius: spacing.sm,
+        padding: spacing.sm,
+        backgroundColor: colorList.primarySoft,
+    },
 });
 
 export default BusLocationCard;
