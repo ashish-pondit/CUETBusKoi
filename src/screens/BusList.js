@@ -7,7 +7,6 @@ import { StyleSheet,
     FlatList,
     Alert } from "react-native";
 import BusButton from "../component/BusButton";
-
 const DATA = [
     {
         'id': 1,
@@ -43,7 +42,6 @@ const DATA = [
     },
 
 ]
-
 
 
 const BusList = () => {
