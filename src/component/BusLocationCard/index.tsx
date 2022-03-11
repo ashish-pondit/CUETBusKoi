@@ -9,12 +9,12 @@ import {
   View,
 } from 'react-native';
 
-import Routes from './src/navigation/Routes';
-
-const App = () => {
+const BusLocationCard = ({}) => {
   return (
     <View style={styles.continer}>
-      <Routes />
+      <View>
+        <Text></Text>
+      </View>
     </View>
   );
 };
@@ -25,4 +25,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default BusLocationCard;
