@@ -4,7 +4,7 @@ import {
     Button,
     View,
     SafeAreaView,
-    Text,
+    Text,Linking,
     FlatList,
     Alert,
     PermissionsAndroid,
@@ -16,12 +16,11 @@ import { getUniqueId } from 'react-native-device-info';
 import BusButton from '../../component/BusButton';
 import {busData} from '../../data/busList.json'
 import Geolocation from 'react-native-geolocation-service';
-import VIForegroundService from '@voximplant/react-native-foreground-service';
+const VIForegroundService = require('@voximplant/react-native-foreground-service');
 import Firebase from '../../config/firebase';
-import MapView from './MapView';
+//import MapView from './MapView';
 
 const BusList = () => {
-
     
   const [forceLocation, setForceLocation] = useState(true);
   const [highAccuracy, setHighAccuracy] = useState(true);
@@ -30,9 +29,30 @@ const BusList = () => {
   const [observing, setObserving] = useState(false);
   const [foregroundService, setForegroundService] = useState(false);
   const [useLocationManager, setUseLocationManager] = useState(false);
-  const [location, setLocation] = useState(null);
+  const watchId = useRef<number|null>(null);
+  const locationsArray = new Array();
+  var data = {
+    latitude: 0,
+    longitude: 0,
+    timestamp: 0
+  };
+  for(var i=0;i<10;i=i+1)
+  {
+    locationsArray.push(data);
+  }
 
-  const watchId = useRef(null);
+  const stopForegroundService = useCallback(() => {
+    VIForegroundService.stopService().catch((err:any) => err);
+  }, []);
+
+  const removeLocationUpdates = useCallback(() => {
+    if (watchId.current !== null) {
+      stopForegroundService();
+      Geolocation.clearWatch(watchId.current);
+      watchId.current = null;
+      setObserving(false);
+    }
+  }, [stopForegroundService]);
 
   useEffect(() => {
     return () => {
@@ -120,12 +140,10 @@ const BusList = () => {
 
     Geolocation.getCurrentPosition(
       (position) => {
-        setLocation(position);
         console.log(position);
       },
       (error) => {
         Alert.alert(`Code ${error.code}`, error.message);
-        setLocation(null);
         console.log(error);
       },
       {
@@ -144,7 +162,7 @@ const BusList = () => {
     );
   };
 
-  const getLocationUpdates = async (busName) => {
+  const getLocationUpdates = async (busName:string) => {
     const hasPermission = await hasLocationPermission();
 
     if (!hasPermission) {
@@ -159,12 +177,10 @@ const BusList = () => {
 
     watchId.current = Geolocation.watchPosition(
       (position) => {
-        setLocation(position);
         storeLocation(busName,position);
         //console.log(position);
       },
       (error) => {
-        setLocation(null);
         console.log(error);
       },
       {
@@ -184,14 +200,6 @@ const BusList = () => {
     );
   };
 
-  const removeLocationUpdates = useCallback(() => {
-    if (watchId.current !== null) {
-      stopForegroundService();
-      Geolocation.clearWatch(watchId.current);
-      watchId.current = null;
-      setObserving(false);
-    }
-  }, [stopForegroundService]);
 
   const startForegroundService = async () => {
     if (Platform.Version >= 26) {
@@ -212,28 +220,28 @@ const BusList = () => {
     });
   };
 
-  const stopForegroundService = useCallback(() => {
-    VIForegroundService.stopService().catch((err) => err);
-  }, []);
+
 
   
-  function storeLocation(id, location){
-    console.log(location);
+  function storeLocation(id:string, location:any){
+    var data = {
+      latitude: location['coords']['latitude'],
+      longitude: location['coords']['longitude'],
+      timestamp: location['timestamp']
+    };
+    locationsArray.splice(0,0,data);
+    locationsArray.pop();
         //const dayId = dayjs(location.timestamp).format('HHmmss');
     const db = getDatabase(Firebase);
     const dref = ref(db, 'buses/'+id+'/'+getUniqueId());
-    set(dref,{
-            latitude: location['coords']['latitude'],
-            longitude: location['coords']['longitude'],
-            timestamp: location['timestamp']
-        });
+    set(dref,JSON.stringify(locationsArray));
   };
 
 
 
     function updateLocation(name: string)
     {
-        console.log('Updating location for '+ name+' on firebase');
+        Alert.alert('Updating location for '+ name+' on firebase');
         getLocationUpdates(name);
     }
 
