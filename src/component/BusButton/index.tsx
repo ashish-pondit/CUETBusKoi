@@ -12,10 +12,10 @@ import {
 
 interface BusButtonprops {
     title: string
+    onPressButton :  (name: string) => void
 }
 
-const BusButton= ({title}:BusButtonprops) => {
-    console.log(title)
+const BusButton= ({title, onPressButton}:BusButtonprops) => {
     return (
         // <Pressable style={styles.buttonStyle} onPress={() => alert("Test Alert!!")}>
         //     <Text style={styles.text}>{title}</Text>
@@ -24,7 +24,7 @@ const BusButton= ({title}:BusButtonprops) => {
             // </Button>styles={styles.buttonStyle}
 
             title={title}
-            onPress={() => Alert.alert('Hello there, ' + title)}
+            onPress={() => onPressButton(title)}
         />
     );
 };
