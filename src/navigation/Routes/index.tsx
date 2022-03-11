@@ -1,23 +1,14 @@
 import * as React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
-// import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import colorlist from '../../config/colorlist';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Locationhistory from '../../screens/Locationhistory';
 const Tab = createBottomTabNavigator();
 
-// function HomeScreen({navigation}) {
-//   // console.log(navigation);
-//   return (
-//     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-//       <Text>Test Home Screen</Text>
-//     </View>
-//   );
-// }
-
-function OutputPage() {
+// dummary update location screen
+function UpdateLocation() {
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text>Test update location page</Text>
@@ -40,7 +31,6 @@ function Routes() {
               iconName = focused ? 'ios-location' : 'ios-location-outline';
             }
 
-            // You can return any component that you like here!
             return <Ionicons name={iconName} size={size} color={color} />;
           },
           tabBarActiveTintColor: colorlist.primarySoft,
@@ -53,7 +43,7 @@ function Routes() {
         />
         <Tab.Screen
           name="Input"
-          component={OutputPage}
+          component={UpdateLocation}
           options={{title: 'Update Location'}}
         />
       </Tab.Navigator>
