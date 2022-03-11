@@ -17,10 +17,12 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+import Routes from './src/navigation/Routes';
+
 const App = () => {
   return (
     <View style={styles.continer}>
-      <Text>Hello Cuet Bus</Text>
+      <Routes />
     </View>
   );
 };
