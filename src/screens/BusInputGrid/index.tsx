@@ -9,9 +9,25 @@ import {
     Alert,
 } from 'react-native';
 import BusButton from '../../component/BusButton';
-import {busData} from '../../data/busList.json'
+import { busData } from '../../data/busList.json';
+
+// import Geolocation from 'react-native-geolocation-service';
 
 const BusList = () => {
+    // const findLocation = async () => {
+    //     Geolocation.getCurrentPosition(
+    //         position => {
+    //             console.log(
+    //                 '88888888888888888888888888888888888888888888888888888',
+    //             );
+    //             console.log(position);
+    //         },
+    //         error => {
+    //             console.log(error);
+    //         },
+    //         { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+    //     );
+    // };
     return (
         <SafeAreaView>
             <FlatList

@@ -10,12 +10,29 @@ import {
     Alert,
 } from 'react-native';
 
+import Geolocation from 'react-native-geolocation-service';
+
 interface BusButtonprops {
-    title: string
+    title: string;
 }
 
-const BusButton= ({title}:BusButtonprops) => {
-    console.log(title)
+const BusButton = ({ title }: BusButtonprops) => {
+    const findLocation = async () => {
+        Geolocation.getCurrentPosition(
+            position => {
+                console.log(
+                    '88888888888888888888888888888888888888888888888888888',
+                );
+                console.log(position);
+            },
+            error => {
+                console.log(error);
+            },
+            { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+        );
+    };
+
+    console.table(title);
     return (
         // <Pressable style={styles.buttonStyle} onPress={() => alert("Test Alert!!")}>
         //     <Text style={styles.text}>{title}</Text>
@@ -24,7 +41,9 @@ const BusButton= ({title}:BusButtonprops) => {
             // </Button>styles={styles.buttonStyle}
 
             title={title}
-            onPress={() => Alert.alert('Hello there, ' + title)}
+            onPress={() => {
+                findLocation();
+            }}
         />
     );
 };
