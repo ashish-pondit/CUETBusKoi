@@ -8,16 +8,25 @@ import {
     FlatList,
     Alert,
 } from 'react-native';
+import { useDeviceOrientation } from '@react-native-community/hooks';
 import BusButton from '../../component/BusButton';
 import {busData} from '../../data/busList.json'
+import { fontConfig, colorList, spacing } from '../../config';
 
 const BusList = () => {
+    const {landscape} = useDeviceOrientation();
     return (
-        <SafeAreaView>
+        <SafeAreaView style={styles.container}>
+            <View>
+                <Text style={[{marginTop: landscape ? 0 : 50}, styles.titleStyle]}>
+                    Select Bus
+                </Text>
+            </View>
             <FlatList
+                style={{marginTop: landscape ? 0 : 20}}
                 data={busData}
                 renderItem={({ item }) => (
-                    <View style={styles.container}>
+                    <View style={styles.itemContainer}>
                         <BusButton title={item.busName} />
                     </View>
                 )}
@@ -33,12 +42,20 @@ export default BusList;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        padding: spacing.md,
+        backgroundColor: colorList.secondary,
+        
+    },
+    itemContainer: {
+        flex: 1, 
         margin: 3,
-        fontSize: 50,
-        flexDirection: 'column',
+        flexDirection: 'column'
     },
-    containerStyle: {
-        fontSize: 30,
-        backgroundColor: 'black',
-    },
+    titleStyle: {
+        fontSize: fontConfig.xxlg,
+        textAlign: 'center',
+        color: colorList.primary,
+        fontWeight: 'bold',
+
+    }
 });
