@@ -10,7 +10,7 @@ import {
   View,
 } from 'react-native';
 
-import {busDATA} from '../../data/dummy';
+import {busData} from '../../data/busList.json';
 import {spacing, fontConfig, colorList} from '../../config';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
@@ -18,7 +18,7 @@ const BusLocationCard = ({}) => {
   return (
     <View style={styles.continer}>
       <View style={styles.containerText}>
-        <Text style={styles.busNameTxt}>{busDATA[7].busName}</Text>
+        <Text style={styles.busNameTxt}>{busData[7].busName}</Text>
         <View style={styles.containerLoc}>
           <Text style={styles.locationTxt}>GEC More</Text>
           <Text style={styles.updateTimeTxt}>Updated: 2 min ago</Text>

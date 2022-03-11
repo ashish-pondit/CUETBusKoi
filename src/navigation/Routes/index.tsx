@@ -5,7 +5,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {colorList} from '../../config';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Locationhistory from '../../screens/Locationhistory';
-import BusList from '../../screens/BusList';
+import BusList from '../../screens/BusInputGrid';
 const Tab = createBottomTabNavigator();
 
 function Routes() {
