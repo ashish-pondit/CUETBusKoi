@@ -10,7 +10,12 @@ import {
     Alert,
 } from 'react-native';
 
-const BusButton = ({ title, onPressButton }) => {
+interface BusButtonprops {
+    title: string
+}
+
+const BusButton= ({title}:BusButtonprops) => {
+    console.log(title)
     return (
         // <Pressable style={styles.buttonStyle} onPress={() => alert("Test Alert!!")}>
         //     <Text style={styles.text}>{title}</Text>
@@ -19,7 +24,7 @@ const BusButton = ({ title, onPressButton }) => {
             // </Button>styles={styles.buttonStyle}
 
             title={title}
-            onPress={() => onPressButton(title)}
+            onPress={() => Alert.alert('Hello there, ' + title)}
         />
     );
 };

@@ -1,10 +1,12 @@
 import * as React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
+import BusLocationCard from '../../component/BusLocationCard';
+import {colorList} from '../../config';
 
 function Locationhistory() {
   return (
     <View style={styles.container}>
-      <Text>This is homescreen</Text>
+      <BusLocationCard />
     </View>
   );
 }
@@ -12,6 +14,7 @@ function Locationhistory() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colorList.secondary,
   },
 });
 
