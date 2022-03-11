@@ -5,16 +5,9 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import colorlist from '../../config/colorlist';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Locationhistory from '../../screens/Locationhistory';
+import BusList from '../../screens/BusList';
 const Tab = createBottomTabNavigator();
 
-// dummary update location screen
-function UpdateLocation() {
-  return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>Test update location page</Text>
-    </View>
-  );
-}
 
 function Routes() {
   return (
@@ -43,7 +36,7 @@ function Routes() {
         />
         <Tab.Screen
           name="Input"
-          component={UpdateLocation}
+          component={BusList}
           options={{title: 'Update Location'}}
         />
       </Tab.Navigator>
