@@ -18,7 +18,7 @@ interface BusinfoProps {
 }
 
 const BusLocationCard = ({ busInfo }: BusinfoProps) => {
-    console.log(busInfo);
+    // console.log(busInfo);
     return (
         <View style={styles.continer}>
             <TouchableOpacity style={styles.containerText}>

@@ -12,6 +12,7 @@ export const colorList = {
     secondary: '#f9f4e6',
     darkSoft: '#8a8f8a',
     primaryXsoft: '#FFEDDB',
+    primaryMsoft: '#ffcccc',
 };
 
 export const spacing = {

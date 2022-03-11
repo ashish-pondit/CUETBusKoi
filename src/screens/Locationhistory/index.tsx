@@ -9,14 +9,17 @@ function Locationhistory() {
     function busList(data: any) {
         let buslocationList = [];
         for (let i = 0; i < data.length; i++) {
-            buslocationList.push(<BusLocationCard busInfo={data[i]} />);
+            buslocationList.push(<BusLocationCard busInfo={data[i]} key={i} />);
         }
         return buslocationList;
     }
     // busData[0]
     return (
         <View style={styles.container}>
-            <ScrollView>{busList(busData)}</ScrollView>
+            <ScrollView>
+                {busList(busData)}
+                <View style={styles.dummy} />
+            </ScrollView>
         </View>
     );
 }
@@ -25,6 +28,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: colorList.secondary,
+    },
+    dummy: {
+        height: 200,
+        width: '100%',
+        // backgroundColor: 'yellow',
     },
 });
 
