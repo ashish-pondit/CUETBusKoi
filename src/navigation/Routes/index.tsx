@@ -2,12 +2,11 @@ import * as React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import colorlist from '../../config/colorlist';
+import {colorList} from '../../config';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Locationhistory from '../../screens/Locationhistory';
 import BusList from '../../screens/BusList';
 const Tab = createBottomTabNavigator();
-
 
 function Routes() {
   return (
@@ -26,7 +25,7 @@ function Routes() {
 
             return <Ionicons name={iconName} size={size} color={color} />;
           },
-          tabBarActiveTintColor: colorlist.primarySoft,
+          tabBarActiveTintColor: colorList.primarySoft,
           tabBarInactiveTintColor: 'gray',
         })}>
         <Tab.Screen
