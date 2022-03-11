@@ -15,15 +15,16 @@ import {
 
 interface BusButtonprops {
     title: string;
+    onPressButton: (name: string) => void;
 }
 
-const BusButton= ({title}:BusButtonprops) => {
+const BusButton = ({ title, onPressButton }: BusButtonprops) => {
     return (
         <TouchableOpacity
-            style={styles.buttonContainer}   
-            onPress={() => Alert.alert('Hello there, '+ title)}
+            style={styles.buttonContainer}
+            onPress={() => onPressButton(title)}
         >
-            <Text style={styles.buttonText}>{title}</Text>  
+            <Text style={styles.buttonText}>{title}</Text>
         </TouchableOpacity>
     );
 };
@@ -33,12 +34,11 @@ const styles = StyleSheet.create({
     buttonText: {
         fontSize: fontConfig.lg,
         color: colorList.secondary,
-        fontWeight: "bold",
-        alignSelf: "center",
-        
+        fontWeight: 'bold',
+        alignSelf: 'center',
     },
     buttonContainer: {
-        alignItems: "center",
+        alignItems: 'center',
         justifyContent: 'center',
         elevation: 8,
         borderRadius: 7,
@@ -46,7 +46,5 @@ const styles = StyleSheet.create({
         paddingVertical: 2,
         paddingHorizontal: 2,
         height: 100,
-        
-    }
-    
+    },
 });

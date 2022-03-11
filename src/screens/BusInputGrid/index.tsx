@@ -1,38 +1,344 @@
-import React from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
     StyleSheet,
     Button,
     View,
     SafeAreaView,
     Text,
+    Linking,
     FlatList,
     Alert,
+    PermissionsAndroid,
+    Platform,
+    ToastAndroid,
 } from 'react-native';
 import { useDeviceOrientation } from '@react-native-community/hooks';
 import BusButton from '../../component/BusButton';
-import {busData} from '../../data/busList.json'
+import { busData } from '../../data/busList.json';
 import { fontConfig, colorList, spacing } from '../../config';
+import { getDatabase, ref, set } from 'firebase/database';
+import { getUniqueId } from 'react-native-device-info';
+import Geolocation from 'react-native-geolocation-service';
+//const VIForegroundService = require('@voximplant/react-native-foreground-service');
+import BackgroundJob from 'react-native-background-actions';
+import Firebase from '../../config/firebase';
+//import MapView from './MapView';
+BackgroundJob.on('expiration', () => {
+    console.log('iOS: I am being closed!');
+});
 
+Linking.addEventListener('url', handleOpenURL);
+
+function handleOpenURL(evt: any) {
+    // Will be called when the notification is pressed
+    console.log(evt.url);
+    // do something
+}
 const BusList = () => {
-    const {landscape} = useDeviceOrientation();
+    const { landscape } = useDeviceOrientation();
+    const [forceLocation, setForceLocation] = useState(true);
+    const [highAccuracy, setHighAccuracy] = useState(true);
+    const [locationDialog, setLocationDialog] = useState(true);
+    const [significantChanges, setSignificantChanges] = useState(false);
+    const [observing, setObserving] = useState(false);
+    const [foregroundService, setForegroundService] = useState(false);
+    const [useLocationManager, setUseLocationManager] = useState(false);
+    const watchId = useRef<number | null>(null);
+    var selectedBusName: string = '';
+    const locationsArray = new Array();
+    var data = {
+        latitude: 0,
+        longitude: 0,
+        timestamp: 0,
+    };
+    for (var i = 0; i < 10; i = i + 1) {
+        locationsArray.push(data);
+    }
+    const options = {
+        taskName: 'BusKoi',
+        taskTitle: 'BusKoi',
+        taskDesc: 'Sharing Your Location',
+        taskIcon: {
+            name: 'ic_launcher',
+            type: 'mipmap',
+        },
+        color: '#ff00ff',
+        linkingURI: 'CUET-BusKoi://MainActivity',
+        parameters: {
+            delay: 1000,
+        },
+    };
+    const toggleBackground = async () => {
+        var playing = BackgroundJob.isRunning();
+        playing = !playing;
+        if (playing) {
+            try {
+                console.log('Trying to start background service');
+                await BackgroundJob.start(getLocationUpdates, options);
+                console.log('Successful start!');
+            } catch (e) {
+                console.log('Error', e);
+            }
+        } else {
+            console.log('Stop background service');
+            removeLocationUpdates();
+            await BackgroundJob.stop();
+        }
+    };
+
+    /*
+  const stopForegroundService = useCallback(() => {
+    VIForegroundService.stopService().catch((err:any) => err);
+  }, []);
+*/
+    const removeLocationUpdates = useCallback(
+        () => {
+            if (watchId.current !== null) {
+                //stopForegroundService();
+                Geolocation.clearWatch(watchId.current);
+                watchId.current = null;
+                setObserving(false);
+            }
+        },
+        [
+            /*stopForegroundService*/
+        ],
+    );
+
+    useEffect(() => {
+        return () => {
+            removeLocationUpdates();
+        };
+    }, [removeLocationUpdates]);
+
+    const hasPermissionIOS = async () => {
+        const openSetting = () => {
+            Linking.openSettings().catch(() => {
+                Alert.alert('Unable to open settings');
+            });
+        };
+        const status = await Geolocation.requestAuthorization('whenInUse');
+
+        if (status === 'granted') {
+            return true;
+        }
+
+        if (status === 'denied') {
+            Alert.alert('Location permission denied');
+        }
+
+        if (status === 'disabled') {
+            Alert.alert(
+                `Turn on Location Services to allow BusKoi to determine your location.`,
+                '',
+                [
+                    { text: 'Go to Settings', onPress: openSetting },
+                    { text: "Don't Use Location", onPress: () => {} },
+                ],
+            );
+        }
+
+        return false;
+    };
+
+    const hasLocationPermission = async () => {
+        if (Platform.OS === 'ios') {
+            const hasPermission = await hasPermissionIOS();
+            return hasPermission;
+        }
+
+        if (Platform.OS === 'android' && Platform.Version < 23) {
+            return true;
+        }
+
+        const hasPermission = await PermissionsAndroid.check(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        );
+
+        if (hasPermission) {
+            return true;
+        }
+
+        const status1 = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
+        );
+
+        const status = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        );
+
+        if (
+            status1 === PermissionsAndroid.RESULTS.GRANTED &&
+            status1 === PermissionsAndroid.RESULTS.GRANTED
+        ) {
+            return true;
+        }
+
+        if (status1 === PermissionsAndroid.RESULTS.DENIED) {
+            ToastAndroid.show(
+                'Location permission denied by user.',
+                ToastAndroid.LONG,
+            );
+        } else if (status1 === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
+            ToastAndroid.show(
+                'Location permission revoked by user.',
+                ToastAndroid.LONG,
+            );
+        }
+
+        return false;
+    };
+
+    const getLocation = async () => {
+        const hasPermission = await hasLocationPermission();
+
+        if (!hasPermission) {
+            return;
+        }
+
+        Geolocation.getCurrentPosition(
+            position => {
+                console.log(position);
+            },
+            error => {
+                Alert.alert(`Code ${error.code}`, error.message);
+                console.log(error);
+            },
+            {
+                accuracy: {
+                    android: 'high',
+                    ios: 'best',
+                },
+                enableHighAccuracy: highAccuracy,
+                timeout: 15000,
+                maximumAge: 10000,
+                distanceFilter: 0,
+                forceRequestLocation: forceLocation,
+                forceLocationManager: useLocationManager,
+                showLocationDialog: locationDialog,
+            },
+        );
+    };
+
+    const getLocationUpdates = async () => {
+        if (Platform.OS === 'ios') {
+            console.warn(
+                'This task will not keep your app alive in the background by itself, use other library like react-native-track-player that use audio,',
+                'geolocalization, etc. to keep your app alive in the background while you excute the JS from this library.',
+            );
+        }
+        const hasPermission = await hasLocationPermission();
+
+        if (!hasPermission) {
+            return;
+        }
+        setObserving(true);
+
+        await new Promise(async resolve => {
+            /*if (Platform.OS === 'android' && foregroundService) {
+      await startForegroundService();
+    }*/
+
+            watchId.current = Geolocation.watchPosition(
+                position => {
+                    storeLocation(position);
+                    //console.log(position);
+                },
+                error => {
+                    console.log(error);
+                },
+                {
+                    accuracy: {
+                        android: 'high',
+                        ios: 'best',
+                    },
+                    enableHighAccuracy: highAccuracy,
+                    distanceFilter: 0,
+                    interval: 5000,
+                    fastestInterval: 2000,
+                    forceRequestLocation: forceLocation,
+                    forceLocationManager: useLocationManager,
+                    showLocationDialog: locationDialog,
+                    useSignificantChanges: significantChanges,
+                },
+            );
+        });
+    };
+
+    /*
+  const startForegroundService = async () => {
+    if (Platform.Version >= 26) {
+      await VIForegroundService.createNotificationChannel({
+        id: 'locationChannel',
+        name: 'Location Tracking Channel',
+        description: 'Tracks location of user',
+        enableVibration: false,
+      });
+    }
+
+    return VIForegroundService.startService({
+      channelId: 'locationChannel',
+      id: 420,
+      title: 'BusKoi',
+      text: 'Tracking location updates',
+      icon: 'ic_launcher',
+    });
+  };
+
+*/
+
+    function storeLocation(location: any) {
+        var data = {
+            latitude: location['coords']['latitude'],
+            longitude: location['coords']['longitude'],
+            timestamp: location['timestamp'],
+        };
+        locationsArray.splice(0, 0, data);
+        locationsArray.pop();
+        //const dayId = dayjs(location.timestamp).format('HHmmss');
+        const db = getDatabase(Firebase);
+        const dref = ref(db, 'buses/' + selectedBusName + '/' + getUniqueId());
+        set(dref, JSON.stringify(locationsArray));
+    }
+
+    function updateLocation(name: string) {
+        selectedBusName = name;
+        Alert.alert('Updating location for ' + name + ' on firebase');
+        toggleBackground();
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <View>
-                <Text style={[{marginTop: landscape ? 0 : 50}, styles.titleStyle]}>
+                <Text
+                    style={[
+                        { marginTop: landscape ? 0 : 50 },
+                        styles.titleStyle,
+                    ]}
+                >
                     Select Bus
                 </Text>
             </View>
             <FlatList
-                style={{marginTop: landscape ? 0 : 20}}
+                style={{ marginTop: landscape ? 0 : 20 }}
                 data={busData}
                 renderItem={({ item }) => (
                     <View style={styles.itemContainer}>
-                        <BusButton title={item.busName} />
+                        <BusButton
+                            title={item.busName}
+                            onPressButton={updateLocation}
+                        />
                     </View>
                 )}
                 numColumns={2}
                 // keyExtractor={item => item.id}
             />
+            {observing ? (
+                <View>
+                    <Text>Sharing location</Text>
+                    <Button title="stop" onPress={toggleBackground}></Button>
+                </View>
+            ) : null}
         </SafeAreaView>
     );
 };
@@ -44,18 +350,16 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: spacing.md,
         backgroundColor: colorList.secondary,
-        
     },
     itemContainer: {
-        flex: 1, 
+        flex: 1,
         margin: 3,
-        flexDirection: 'column'
+        flexDirection: 'column',
     },
     titleStyle: {
         fontSize: fontConfig.xxlg,
         textAlign: 'center',
         color: colorList.primary,
         fontWeight: 'bold',
-
-    }
+    },
 });
