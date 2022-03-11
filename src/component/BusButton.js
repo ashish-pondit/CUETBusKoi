@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
     View,
     Text,
@@ -7,22 +7,22 @@ import {
     Pressable,
     TextComponent,
     TextPropTypes,
-    Alert
-} from "react-native";
+    Alert,
+} from 'react-native';
 
-const BusButton = ({title}) => {
+const BusButton = ({ title, onPressButton }) => {
     return (
-            // <Pressable style={styles.buttonStyle} onPress={() => alert("Test Alert!!")}>
-            //     <Text style={styles.text}>{title}</Text>
-            // </Pressable>
-            <Button
-                // </Button>styles={styles.buttonStyle}
-                
-                title={title}
-                onPress={ () => alert("Hello there, " + title)}
-             />
-    )
-}
+        // <Pressable style={styles.buttonStyle} onPress={() => alert("Test Alert!!")}>
+        //     <Text style={styles.text}>{title}</Text>
+        // </Pressable>
+        <Button
+            // </Button>styles={styles.buttonStyle}
+
+            title={title}
+            onPress={() => onPressButton(title)}
+        />
+    );
+};
 export default BusButton;
 
 const styles = StyleSheet.create({
@@ -32,19 +32,17 @@ const styles = StyleSheet.create({
         alignments: 'right',
         fontSize: 20,
         justifyContent: 'center',
-        backgroundColor: 'black'
+        backgroundColor: 'black',
     },
     buttonStyle: {
         fontSize: 100,
         height: 100,
         backgroundColor: '#f9f4e6',
-        borderRadius: 4
-        
-    }, 
+        borderRadius: 4,
+    },
     text: {
         color: '#4d0000',
         fontWeight: 'bold',
-        justifyContent: 'center'
-    }
-
-})
+        justifyContent: 'center',
+    },
+});
