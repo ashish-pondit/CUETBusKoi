@@ -1,4 +1,6 @@
+import LinearGradient from 'react-native-linear-gradient';
 import React from 'react';
+import { colorList, fontConfig, spacing } from '../../config';
 import {
     View,
     Text,
@@ -8,6 +10,7 @@ import {
     TextComponent,
     TextPropTypes,
     Alert,
+    TouchableOpacity,
 } from 'react-native';
 
 interface BusButtonprops {
@@ -15,39 +18,35 @@ interface BusButtonprops {
 }
 
 const BusButton= ({title}:BusButtonprops) => {
-    console.log(title)
     return (
-        // <Pressable style={styles.buttonStyle} onPress={() => alert("Test Alert!!")}>
-        //     <Text style={styles.text}>{title}</Text>
-        // </Pressable>
-        <Button
-            // </Button>styles={styles.buttonStyle}
-
-            title={title}
-            onPress={() => Alert.alert('Hello there, ' + title)}
-        />
+        <TouchableOpacity
+            style={styles.buttonContainer}   
+            onPress={() => Alert.alert('Hello there, '+ title)}
+        >
+            <Text style={styles.buttonText}>{title}</Text>  
+        </TouchableOpacity>
     );
 };
 export default BusButton;
 
 const styles = StyleSheet.create({
-    container: {
-        padding: 10,
-        margin: 5,
-        alignments: 'right',
-        fontSize: 20,
-        justifyContent: 'center',
-        backgroundColor: 'black',
+    buttonText: {
+        fontSize: fontConfig.lg,
+        color: colorList.secondary,
+        fontWeight: "bold",
+        alignSelf: "center",
+        
     },
-    buttonStyle: {
-        fontSize: 100,
+    buttonContainer: {
+        alignItems: "center",
+        justifyContent: 'center',
+        elevation: 8,
+        borderRadius: 7,
+        backgroundColor: colorList.primary,
+        paddingVertical: 2,
+        paddingHorizontal: 2,
         height: 100,
-        backgroundColor: '#f9f4e6',
-        borderRadius: 4,
-    },
-    text: {
-        color: '#4d0000',
-        fontWeight: 'bold',
-        justifyContent: 'center',
-    },
+        
+    }
+    
 });
