@@ -8,8 +8,8 @@ import {
     FlatList,
     Alert,
 } from 'react-native';
-import BusButton from '../component/BusButton';
-import { busData } from '../data/buslist.json';
+import BusButton from '../../component/BusButton';
+import {busData} from '../../data/buslist.json'
 
 const BusList = () => {
     return (
@@ -22,7 +22,7 @@ const BusList = () => {
                     </View>
                 )}
                 numColumns={2}
-                keyExtractor={item => item.id}
+                // keyExtractor={item => item.id}
             />
         </SafeAreaView>
     );
