@@ -16,10 +16,21 @@ import { getUniqueId } from 'react-native-device-info';
 import BusButton from '../../component/BusButton';
 import {busData} from '../../data/busList.json'
 import Geolocation from 'react-native-geolocation-service';
-const VIForegroundService = require('@voximplant/react-native-foreground-service');
+//const VIForegroundService = require('@voximplant/react-native-foreground-service');
+import BackgroundJob from 'react-native-background-actions';
 import Firebase from '../../config/firebase';
 //import MapView from './MapView';
+BackgroundJob.on('expiration', () => {
+    console.log('iOS: I am being closed!');
+});
 
+Linking.addEventListener('url', handleOpenURL);
+
+function handleOpenURL(evt:any) {
+    // Will be called when the notification is pressed
+    console.log(evt.url);
+    // do something
+}
 const BusList = () => {
     
   const [forceLocation, setForceLocation] = useState(true);
@@ -30,6 +41,7 @@ const BusList = () => {
   const [foregroundService, setForegroundService] = useState(false);
   const [useLocationManager, setUseLocationManager] = useState(false);
   const watchId = useRef<number|null>(null);
+  var selectedBusName: string ='' ;
   const locationsArray = new Array();
   var data = {
     latitude: 0,
@@ -40,19 +52,51 @@ const BusList = () => {
   {
     locationsArray.push(data);
   }
+  const options = {
+    taskName: 'BusKoi',
+    taskTitle: 'BusKoi',
+    taskDesc: 'Sharing Your Location',
+    taskIcon: {
+        name: 'ic_launcher',
+        type: 'mipmap',
+    },
+    color: '#ff00ff',
+    linkingURI: 'CUET-BusKoi://MainActivity',
+    parameters: {
+        delay: 1000,
+    },
+  };
+  const toggleBackground = async () => {
+    var playing = BackgroundJob.isRunning();
+    playing = !playing;
+    if (playing) {
+        try {
+            console.log('Trying to start background service');
+            await BackgroundJob.start(getLocationUpdates, options);
+            console.log('Successful start!');
+        } catch (e) {
+            console.log('Error', e);
+        }
+    } else {
+        console.log('Stop background service');
+        removeLocationUpdates();
+        await BackgroundJob.stop();
+    }
+};
 
+/*
   const stopForegroundService = useCallback(() => {
     VIForegroundService.stopService().catch((err:any) => err);
   }, []);
-
+*/
   const removeLocationUpdates = useCallback(() => {
     if (watchId.current !== null) {
-      stopForegroundService();
+      //stopForegroundService();
       Geolocation.clearWatch(watchId.current);
       watchId.current = null;
       setObserving(false);
     }
-  }, [stopForegroundService]);
+  }, [/*stopForegroundService*/]);
 
   useEffect(() => {
     return () => {
@@ -108,20 +152,25 @@ const BusList = () => {
       return true;
     }
 
+    
+    const status1 = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
+    );
+    
     const status = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
     );
 
-    if (status === PermissionsAndroid.RESULTS.GRANTED) {
+    if (status1 === PermissionsAndroid.RESULTS.GRANTED && status1 === PermissionsAndroid.RESULTS.GRANTED) {
       return true;
     }
 
-    if (status === PermissionsAndroid.RESULTS.DENIED) {
+    if (status1 === PermissionsAndroid.RESULTS.DENIED) {
       ToastAndroid.show(
         'Location permission denied by user.',
         ToastAndroid.LONG,
       );
-    } else if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
+    } else if (status1 === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
       ToastAndroid.show(
         'Location permission revoked by user.',
         ToastAndroid.LONG,
@@ -162,22 +211,29 @@ const BusList = () => {
     );
   };
 
-  const getLocationUpdates = async (busName:string) => {
-    const hasPermission = await hasLocationPermission();
+  const getLocationUpdates = async () => {
+    if (Platform.OS === 'ios') {
+      console.warn(
+          'This task will not keep your app alive in the background by itself, use other library like react-native-track-player that use audio,',
+          'geolocalization, etc. to keep your app alive in the background while you excute the JS from this library.'
+      );
+  }
+  const hasPermission = await hasLocationPermission();
 
-    if (!hasPermission) {
-      return;
-    }
+  if (!hasPermission) {
+    return;
+  }
+  setObserving(true);
 
-    if (Platform.OS === 'android' && foregroundService) {
+  await new Promise(async (resolve) => {
+    /*if (Platform.OS === 'android' && foregroundService) {
       await startForegroundService();
-    }
+    }*/
 
-    setObserving(true);
 
     watchId.current = Geolocation.watchPosition(
       (position) => {
-        storeLocation(busName,position);
+        storeLocation(position);
         //console.log(position);
       },
       (error) => {
@@ -198,9 +254,10 @@ const BusList = () => {
         useSignificantChanges: significantChanges,
       },
     );
+  });
   };
 
-
+/*
   const startForegroundService = async () => {
     if (Platform.Version >= 26) {
       await VIForegroundService.createNotificationChannel({
@@ -220,10 +277,10 @@ const BusList = () => {
     });
   };
 
-
+*/
 
   
-  function storeLocation(id:string, location:any){
+  function storeLocation( location:any){
     var data = {
       latitude: location['coords']['latitude'],
       longitude: location['coords']['longitude'],
@@ -233,7 +290,7 @@ const BusList = () => {
     locationsArray.pop();
         //const dayId = dayjs(location.timestamp).format('HHmmss');
     const db = getDatabase(Firebase);
-    const dref = ref(db, 'buses/'+id+'/'+getUniqueId());
+    const dref = ref(db, 'buses/'+selectedBusName+'/'+getUniqueId());
     set(dref,JSON.stringify(locationsArray));
   };
 
@@ -241,8 +298,9 @@ const BusList = () => {
 
     function updateLocation(name: string)
     {
+        selectedBusName = name;
         Alert.alert('Updating location for '+ name+' on firebase');
-        getLocationUpdates(name);
+        toggleBackground();
     }
 
     return (
@@ -257,6 +315,11 @@ const BusList = () => {
                 numColumns={2}
                 // keyExtractor={item => item.id}
             />
+            {observing?
+            <View>
+            <Text>Sharing location</Text>
+            <Button title='stop' onPress={toggleBackground}></Button>
+            </View>:null}
         </SafeAreaView>
     );
 };
