@@ -21,18 +21,16 @@ import { getUniqueId } from 'react-native-device-info';
 import Geolocation from 'react-native-geolocation-service';
 //const VIForegroundService = require('@voximplant/react-native-foreground-service');
 import BackgroundJob from 'react-native-background-actions';
-import Firebase from '../../config/firebase';
+import { getBackgroundConfig } from '../../config';
+import Firebase from '../../config';
 //import MapView from './MapView';
 BackgroundJob.on('expiration', () => {
     console.log('iOS: I am being closed!');
 });
 
 Linking.addEventListener('url', handleOpenURL);
-
 function handleOpenURL(evt: any) {
     // Will be called when the notification is pressed
-    console.log(evt.url);
-    // do something
 }
 const BusList = () => {
     const { landscape } = useDeviceOrientation();
@@ -41,8 +39,9 @@ const BusList = () => {
     const [locationDialog, setLocationDialog] = useState(true);
     const [significantChanges, setSignificantChanges] = useState(false);
     const [observing, setObserving] = useState(false);
-    const [foregroundService, setForegroundService] = useState(false);
+    //const [foregroundService, setForegroundService] = useState(false);
     const [useLocationManager, setUseLocationManager] = useState(false);
+    const [busName, setBusName] = useState<string>();
     const watchId = useRef<number | null>(null);
     var selectedBusName: string = '';
     const locationsArray = new Array();
@@ -54,26 +53,14 @@ const BusList = () => {
     for (var i = 0; i < 10; i = i + 1) {
         locationsArray.push(data);
     }
-    const options = {
-        taskName: 'BusKoi',
-        taskTitle: 'BusKoi',
-        taskDesc: 'Sharing Your Location',
-        taskIcon: {
-            name: 'ic_launcher',
-            type: 'mipmap',
-        },
-        color: '#ff00ff',
-        linkingURI: 'CUET-BusKoi://MainActivity',
-        parameters: {
-            delay: 1000,
-        },
-    };
-    const toggleBackground = async () => {
+
+    const toggleBackground = async (name: string) => {
         var playing = BackgroundJob.isRunning();
         playing = !playing;
         if (playing) {
             try {
                 console.log('Trying to start background service');
+                var options = getBackgroundConfig(name);
                 await BackgroundJob.start(getLocationUpdates, options);
                 console.log('Successful start!');
             } catch (e) {
@@ -303,42 +290,54 @@ const BusList = () => {
 
     function updateLocation(name: string) {
         selectedBusName = name;
+        setBusName(name);
         Alert.alert('Updating location for ' + name + ' on firebase');
-        toggleBackground();
+        toggleBackground(name);
     }
 
     return (
         <SafeAreaView style={styles.container}>
-            <View>
-                <Text
-                    style={[
-                        { marginTop: landscape ? 0 : 50 },
-                        styles.titleStyle,
-                    ]}
-                >
-                    Select Bus
-                </Text>
-            </View>
-            <FlatList
-                style={{ marginTop: landscape ? 0 : 20 }}
-                data={busData}
-                renderItem={({ item }) => (
-                    <View style={styles.itemContainer}>
-                        <BusButton
-                            title={item.busName}
-                            onPressButton={updateLocation}
-                        />
-                    </View>
-                )}
-                numColumns={2}
-                // keyExtractor={item => item.id}
-            />
             {observing ? (
                 <View>
-                    <Text>Sharing location</Text>
-                    <Button title="stop" onPress={toggleBackground}></Button>
+                    <Text
+                        style={[
+                            { marginTop: landscape ? 0 : 50 },
+                            styles.titleStyle,
+                        ]}
+                    >
+                        Sharing location of {busName}
+                    </Text>
+                    <Button
+                        title="stop"
+                        onPress={() => toggleBackground('')}
+                    ></Button>
                 </View>
-            ) : null}
+            ) : (
+                <View>
+                    <Text
+                        style={[
+                            { marginTop: landscape ? 0 : 50 },
+                            styles.titleStyle,
+                        ]}
+                    >
+                        Select Bus
+                    </Text>
+                    <FlatList
+                        style={{ marginTop: landscape ? 0 : 20 }}
+                        data={busData}
+                        renderItem={({ item }) => (
+                            <View style={styles.itemContainer}>
+                                <BusButton
+                                    title={item.busName}
+                                    onPressButton={updateLocation}
+                                />
+                            </View>
+                        )}
+                        numColumns={2}
+                        // keyExtractor={item => item.id}
+                    />
+                </View>
+            )}
         </SafeAreaView>
     );
 };
