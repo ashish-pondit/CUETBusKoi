@@ -11,6 +11,9 @@ import {
     PermissionsAndroid,
     Platform,
     ToastAndroid,
+    TouchableOpacity,
+    Image,
+    ImageBackground,
 } from 'react-native';
 import { useDeviceOrientation } from '@react-native-community/hooks';
 import BusButton from '../../component/BusButton';
@@ -325,12 +328,20 @@ const BusList = () => {
                             styles.titleStyle,
                         ]}
                     >
-                        Sharing location of {busName}
+                        Sharing Location of {busName}
                     </Text>
-                    <Button
-                        title="stop"
-                        onPress={() => toggleBackground('')}
-                    ></Button>
+                    <ImageBackground
+                        source={require('../../assets/loc_share_ic.gif')}
+                        style={styles.rippleContainer}
+                    >
+                        <TouchableOpacity 
+                            style={styles.buttonStyle}
+                            onPress={() => toggleBackground('')}
+                        >
+                            <Text style={styles.buttonText}> STOP </Text>
+                        </TouchableOpacity>
+
+                    </ImageBackground>
                 </View>
             ) : (
                 <View>
@@ -381,4 +392,28 @@ const styles = StyleSheet.create({
         color: colorList.primary,
         fontWeight: 'bold',
     },
+    buttonStyle: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center',
+        elevation: 8,
+        borderRadius: 100,
+        backgroundColor: colorList.primary,
+        height: 100,
+        width: 100
+    },
+    buttonText: {
+        fontSize: fontConfig.lg,
+        color: colorList.secondary,
+        fontWeight: 'bold',
+        alignSelf: 'center',
+    },
+    rippleContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center',
+        marginTop: 50,
+        height: 250,
+        width: 250
+    }
 });
