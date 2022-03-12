@@ -141,27 +141,48 @@ const BusList = () => {
         const hasPermission = await PermissionsAndroid.check(
             PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         );
-
-        if (hasPermission) {
-            return true;
-        }
-
-        const status1 = await PermissionsAndroid.request(
+        const hasPermission1 = await PermissionsAndroid.check(
             PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
         );
 
-        const status = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        );
-
-        if (
-            status1 === PermissionsAndroid.RESULTS.GRANTED &&
-            status1 === PermissionsAndroid.RESULTS.GRANTED
-        ) {
+        if (hasPermission === true && hasPermission1 === true) {
             return true;
+        } else {
+            if (!hasPermission1) {
+                await PermissionsAndroid.request(
+                    PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
+                );
+            }
+            if (!hasPermission) {
+                await PermissionsAndroid.request(
+                    PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+                );
+            }
         }
 
-        if (status1 === PermissionsAndroid.RESULTS.DENIED) {
+        const statusFG = await PermissionsAndroid.check(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        );
+        const statusBG = await PermissionsAndroid.check(
+            PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
+        );
+
+        if (statusBG && statusFG) {
+            return true;
+        } else {
+            Alert.alert(
+                'Location Permission',
+                "You Must Provide Location Permssion to 'Allow all the time' to Use This App Properly!",
+                [
+                    {
+                        text: 'Okay',
+                        onPress: () => Linking.openSettings(),
+                    },
+                ],
+            );
+        }
+
+        /*if (status1 === PermissionsAndroid.RESULTS.DENIED) {
             ToastAndroid.show(
                 'Location permission denied by user.',
                 ToastAndroid.LONG,
@@ -171,7 +192,7 @@ const BusList = () => {
                 'Location permission revoked by user.',
                 ToastAndroid.LONG,
             );
-        }
+        }*/
 
         return false;
     };
@@ -291,7 +312,6 @@ const BusList = () => {
     function updateLocation(name: string) {
         selectedBusName = name;
         setBusName(name);
-        Alert.alert('Updating location for ' + name + ' on firebase');
         toggleBackground(name);
     }
 
