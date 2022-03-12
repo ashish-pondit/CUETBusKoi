@@ -29,8 +29,8 @@ export const getBackgroundConfig = busName => {
         taskTitle: 'BusKoi',
         taskDesc: 'Sharing Your Location (' + busName + ')',
         taskIcon: {
-            name: 'ic_launcher',
-            type: 'mipmap',
+            name: 'logo',
+            type: 'drawable',
         },
         color: '#ff00ff',
         linkingURI: 'CUET-BusKoi://MainActivity',
