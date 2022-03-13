@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     SafeAreaView,
     ScrollView,
@@ -10,12 +10,13 @@ import {
 } from 'react-native';
 
 import Routes from './src/navigation/Routes';
-
+import Termsmodal from './src/screens/Termsmodal';
 const App = () => {
+    const [modalVisible, setModalVisible] = useState(true);
     return (
         <View style={styles.continer}>
             {/* <BusList/> */}
-
+            <Termsmodal onClick={setModalVisible} isVisible={modalVisible} />
             <Routes />
         </View>
     );
