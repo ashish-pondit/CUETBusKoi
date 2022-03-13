@@ -7,13 +7,38 @@ import {
     Pressable,
     View,
     ScrollView,
+    TouchableOpacity,
 } from 'react-native';
 import { colorList, fontConfig, spacing } from '../../config';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import MIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Termsmodal = ({ onClick, isVisible }) => {
     const [toggleCheckBox, setToggleCheckBox] = useState(false);
+    const [warn, setwarn] = useState(false);
+
+    useEffect(() => {
+        if (toggleCheckBox) {
+            setwarn(false);
+        }
+    }, [toggleCheckBox]);
+
+    const onSubmit = () => {
+        if (toggleCheckBox) {
+            console.log('async storage goes here');
+        } else {
+            setwarn(true);
+        }
+    };
+
+    const onCheck = () => {
+        setToggleCheckBox(!toggleCheckBox);
+        // if (toggleCheckBox) {
+        //     setwarn(false);
+        // }
+    };
+
     return (
         <Modal
             animationType="slide"
@@ -85,10 +110,44 @@ const Termsmodal = ({ onClick, isVisible }) => {
                         </ScrollView>
                     </View>
 
+                    <View style={styles.checkBoxContainer}>
+                        <TouchableOpacity onPress={() => onCheck()}>
+                            {!toggleCheckBox ? (
+                                <MIcon
+                                    name={'checkbox-blank-outline'}
+                                    size={30}
+                                    color={colorList.primary}
+                                    // style={styles.iconDesign}
+                                />
+                            ) : (
+                                <MIcon
+                                    name={'checkbox-marked'}
+                                    size={30}
+                                    color={colorList.primary}
+                                    // style={styles.iconDesign}
+                                />
+                            )}
+                        </TouchableOpacity>
+                        <Text>
+                            I have read and agree to the terms and conditions
+                            above.
+                        </Text>
+                    </View>
+
+                    {warn ? (
+                        <Text style={styles.submitError}>
+                            You must accept the terms and conditons to continue
+                            to the app.
+                        </Text>
+                    ) : (
+                        <Text style={styles.submitError}></Text>
+                    )}
+
                     <Pressable
                         style={styles.continueButton}
                         onPress={() => {
-                            onClick(false);
+                            // onClick(false);
+                            onSubmit();
                             console.log('mu hahaha');
                         }}
                     >
@@ -119,10 +178,10 @@ const styles = StyleSheet.create({
         // margin: 20,
         height: '100%',
         width: '100%',
-        backgroundColor: 'white',
+        backgroundColor: colorList.secondary,
         borderRadius: 20,
         // padding: 35,
-        paddingTop: spacing.xlg,
+        paddingTop: spacing.lg,
         paddingLeft: spacing.lg,
         paddingRight: spacing.lg,
         alignItems: 'center',
@@ -154,11 +213,11 @@ const styles = StyleSheet.create({
         color: colorList.primary,
     },
     termsContainer: {
-        height: '80%',
+        height: '79%',
         backgroundColor: '#00002230',
     },
     continueButton: {
-        width: '50%',
+        // width: '50%',
         height: 45,
         backgroundColor: colorList.primary,
         color: colorList.secondary,
@@ -167,11 +226,32 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'row',
+        position: 'absolute',
+        bottom: spacing.md,
+        paddingLeft: spacing.md,
+        paddingRight: spacing.md,
     },
     iconDesign: {
-        alignSelf: 'center',
-        position: 'absolute',
-        right: spacing.md,
+        // alignSelf: 'center',
+        // position: 'absolute',
+        // right: spacing.md,
+    },
+    checkBoxContainer: {
+        width: '90%',
+        color: colorList.primary,
+        flexDirection: 'row',
+        // margin: spacing.md,
+        marginLeft: spacing.md,
+        marginRight: spacing.md,
+        marginTop: spacing.md,
+        marginBottom: 0,
+        // padding: spacing.sm,
+    },
+    submitError: {
+        fontSize: fontConfig.sm,
+        color: colorList.warning,
+        position: 'relative',
+        top: 0,
     },
 });
 
