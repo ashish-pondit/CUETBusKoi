@@ -19,7 +19,7 @@ import { useDeviceOrientation } from '@react-native-community/hooks';
 import BusButton from '../../component/BusButton';
 import { busData } from '../../data/busList.json';
 import { fontConfig, colorList, spacing } from '../../config';
-import { getDatabase, ref, set } from 'firebase/database';
+import { child, get, getDatabase, ref, set } from 'firebase/database';
 import { getUniqueId } from 'react-native-device-info';
 import Geolocation from 'react-native-geolocation-service';
 //const VIForegroundService = require('@voximplant/react-native-foreground-service');
@@ -35,6 +35,7 @@ Linking.addEventListener('url', handleOpenURL);
 function handleOpenURL(evt: any) {
     // Will be called when the notification is pressed
 }
+
 const BusList = () => {
     const { landscape } = useDeviceOrientation();
     const [forceLocation, setForceLocation] = useState(true);
@@ -47,6 +48,13 @@ const BusList = () => {
     const [busName, setBusName] = useState<string>();
     const watchId = useRef<number | null>(null);
     var selectedBusName: string = '';
+    var interval = 30000,
+        fastestInterval = 25000;
+    get(child(ref(getDatabase(Firebase)), 'constants/')).then(snapshot => {
+        var data = snapshot.val();
+        interval = data['interval'];
+        fastestInterval = data['fastestInterval'];
+    });
     const locationsArray = new Array();
     var data = {
         latitude: 0,
@@ -265,8 +273,8 @@ const BusList = () => {
                     },
                     enableHighAccuracy: highAccuracy,
                     distanceFilter: 0,
-                    interval: 5000,
-                    fastestInterval: 2000,
+                    interval: interval,
+                    fastestInterval: fastestInterval,
                     forceRequestLocation: forceLocation,
                     forceLocationManager: useLocationManager,
                     showLocationDialog: locationDialog,
@@ -334,13 +342,12 @@ const BusList = () => {
                         source={require('../../assets/loc_share_ic.gif')}
                         style={styles.rippleContainer}
                     >
-                        <TouchableOpacity 
+                        <TouchableOpacity
                             style={styles.buttonStyle}
                             onPress={() => toggleBackground('')}
                         >
                             <Text style={styles.buttonText}> STOP </Text>
                         </TouchableOpacity>
-
                     </ImageBackground>
                 </View>
             ) : (
@@ -400,7 +407,7 @@ const styles = StyleSheet.create({
         borderRadius: 100,
         backgroundColor: colorList.primary,
         height: 100,
-        width: 100
+        width: 100,
     },
     buttonText: {
         fontSize: fontConfig.lg,
@@ -414,6 +421,6 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         marginTop: 50,
         height: 250,
-        width: 250
-    }
+        width: 250,
+    },
 });

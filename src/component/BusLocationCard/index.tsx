@@ -14,18 +14,32 @@ import { spacing, fontConfig, colorList } from '../../config';
 import Icon from 'react-native-vector-icons/Entypo';
 
 interface BusinfoProps {
-    busInfo: { id: number; busName: string; location: string };
+    busInfo: { id: number; busName: string; location: any };
+    time: number;
 }
 
-const BusLocationCard = ({ busInfo }: BusinfoProps) => {
+function getPlaceName(loc: any) {
+    //return loc['longitude'] + ' ' + loc['latitude'];
+    return 'ReverseGeocode';
+}
+
+const BusLocationCard = ({ busInfo, time }: BusinfoProps) => {
     // console.log(busInfo);
     return (
         <View style={styles.continer}>
             <TouchableOpacity style={styles.containerText}>
                 <Text style={styles.busNameTxt}>{busInfo.busName}</Text>
                 <View style={styles.containerLoc}>
-                    <Text style={styles.locationTxt}>{busInfo.location}</Text>
-                    <Text style={styles.updateTimeTxt}>Updated: 2 min ago</Text>
+                    <Text style={styles.locationTxt}>
+                        {getPlaceName(busInfo.location[time])}
+                    </Text>
+                    {time == 0 ? (
+                        <Text style={styles.updateTimeTxt}> now</Text>
+                    ) : (
+                        <Text style={styles.updateTimeTxt}>
+                            Updated: {time} min ago
+                        </Text>
+                    )}
                 </View>
             </TouchableOpacity>
             <TouchableOpacity style={styles.locationIconBox}>
