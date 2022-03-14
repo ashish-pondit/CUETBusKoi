@@ -39,11 +39,14 @@ function getPlaceName(busData: any, time: number) {
 function getLastTime(busData: any, time: number) {
     var loc = busData.location;
     if (time != -1) {
+        if (time == 0) return 'now';
+        else return 'update ' + time + ' min ago';
         return time;
     } else {
         for (let i = 0; i < loc.length; i++) {
             if (loc[i]['longitude'] != 0 && loc[i]['latitude'] != 0) {
-                return i;
+                if (i == 0) return 'now';
+                else return 'update ' + i + ' min ago';
             }
         }
     }
@@ -63,7 +66,7 @@ const BusLocationCard = ({ busInfo, time }: BusinfoProps) => {
                         <Text style={styles.updateTimeTxt}> now</Text>
                     ) : (
                         <Text style={styles.updateTimeTxt}>
-                            Updated: {getLastTime(busInfo, time)} min ago
+                            {getLastTime(busInfo, time)}
                         </Text>
                     )}
                 </View>
