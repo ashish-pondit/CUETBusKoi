@@ -64,7 +64,7 @@ function Locationhistory() {
         let buslocationList = [];
         for (let i = 0; i < data.length; i++) {
             buslocationList.push(
-                <BusLocationCard busInfo={data[i]} time={0} key={i} />,
+                <BusLocationCard busInfo={data[i]} time={-1} key={i} />,
             );
         }
         return buslocationList;

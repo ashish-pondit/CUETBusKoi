@@ -22,6 +22,7 @@ export const spacing = {
     xlg: 25,
     xxlg: 35,
 };
+export const locationIntervals = [0, 30, 90, 150, 210, 300];
 
 export const getBackgroundConfig = busName => {
     const backgroundConfig = {
