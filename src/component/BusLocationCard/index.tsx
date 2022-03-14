@@ -18,9 +18,38 @@ interface BusinfoProps {
     time: number;
 }
 
-function getPlaceName(loc: any) {
-    //return loc['longitude'] + ' ' + loc['latitude'];
-    return 'ReverseGeocode';
+function getPlaceName(busData: any, time: number) {
+    var loc = busData.location;
+    if (time != -1) {
+        //return loc['longitude'] + ' ' + loc['latitude'];
+        if (loc[time]['longitude'] == 0 || loc[time]['latitude'] == 0)
+            return 'Unknown';
+        else return loc[time]['longitude'] + ' ' + loc[time]['latitude'];
+    } else {
+        for (let i = 0; i < loc.length; i++) {
+            if (loc[i]['longitude'] != 0 && loc[i]['latitude'] != 0) {
+                time = i;
+                return loc[i]['longitude'] + ' ' + loc[i]['latitude'];
+            }
+        }
+        return 'Unknown';
+    }
+}
+
+function getLastTime(busData: any, time: number) {
+    var loc = busData.location;
+    if (time != -1) {
+        if (time == 0) return 'now';
+        else return 'update ' + time + ' min ago';
+        return time;
+    } else {
+        for (let i = 0; i < loc.length; i++) {
+            if (loc[i]['longitude'] != 0 && loc[i]['latitude'] != 0) {
+                if (i == 0) return 'now';
+                else return 'update ' + i + ' min ago';
+            }
+        }
+    }
 }
 
 const BusLocationCard = ({ busInfo, time }: BusinfoProps) => {
@@ -31,13 +60,13 @@ const BusLocationCard = ({ busInfo, time }: BusinfoProps) => {
                 <Text style={styles.busNameTxt}>{busInfo.busName}</Text>
                 <View style={styles.containerLoc}>
                     <Text style={styles.locationTxt}>
-                        {getPlaceName(busInfo.location[time])}
+                        {getPlaceName(busInfo, time)}
                     </Text>
                     {time == 0 ? (
                         <Text style={styles.updateTimeTxt}> now</Text>
                     ) : (
                         <Text style={styles.updateTimeTxt}>
-                            Updated: {time} min ago
+                            {getLastTime(busInfo, time)}
                         </Text>
                     )}
                 </View>
