@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import {
+    View,
+    Text,
+    StyleSheet,
+    ScrollView,
+    ToastAndroid,
+    Platform,
+} from 'react-native';
 import BusLocationCard from '../../component/BusLocationCard';
 import { busData } from '../../data/busList.json';
 import { colorList } from '../../config';
@@ -8,6 +15,11 @@ import Firebase from '../../config';
 import { getDatabase, onValue, get, ref, child } from 'firebase/database';
 import { getType } from 'react-native-device-info';
 import { calculateLocation } from './locationCalculator';
+function notifyMessage(msg: string) {
+    if (Platform.OS === 'android') {
+        ToastAndroid.show(msg, ToastAndroid.SHORT);
+    }
+}
 function Locationhistory() {
     const [allBusData, setAllBusData] = React.useState<{ [key: string]: any }>(
         {},
@@ -16,10 +28,13 @@ function Locationhistory() {
         {},
     );
     var dataReceiveInterval = 30000;
-
+    var nCountRule = 3;
+    var kPercentageRule = 0.5;
     get(child(ref(getDatabase(Firebase)), 'constants/')).then(snapshot => {
         var data = snapshot.val();
         dataReceiveInterval = data['dataReceiveInterval'];
+        nCountRule = data['nCountRule'];
+        kPercentageRule = data['kPercentageRule'];
     });
     var loaded: boolean = false;
     function setFirebaseData() {
@@ -39,13 +54,20 @@ function Locationhistory() {
                         cnt++;
                     }
                     count[bName] = cnt;
-                    arr[bName] = latlong;
+                    if (cnt >= nCountRule) arr[bName] = latlong;
+                    else {
+                        /*console.log(
+                            'discarded ' + bName + ' due to nCountRule',
+                        );*/
+                        arr[bName] = [];
+                    }
                 } else {
                     arr[bName] = [];
                 }
             }
             setUserCount(count);
-            setAllBusData(calculateLocation(arr));
+            setAllBusData(calculateLocation(arr, kPercentageRule, nCountRule));
+            notifyMessage('Bus Locations Updated');
             //console.log(allBusData['মাতামুহুরি']);
             //console.log(arr);
         });

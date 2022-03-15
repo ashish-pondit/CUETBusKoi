@@ -2,24 +2,27 @@
 import { locationIntervals } from '../../config';
 import geocluster from './geocluster';
 
-function getBusLocation(data) {
+function getBusLocation(data, kPercentageRule, nCountRule) {
     var result = geocluster(data, 1.5);
-    var mxL = 0,
-        indx = -1;
+    var mxL = nCountRule,
+        indx = -1,
+        total = 0;
     for (let i = 0; i < result.length; i++) {
-        if (result[i]['elements'].length > mxL) {
+        total = total + result[i]['elements'].length;
+        if (result[i]['elements'].length >= mxL) {
             mxL = result[i]['elements'].length;
             indx = i;
         }
     }
-    if (indx == -1)
+    if (indx == -1 || mxL < total * kPercentageRule) {
+        //console.log('discarded due to Rules');
         return [
             {
                 longitude: 0,
                 latitude: 0,
             },
         ];
-    else {
+    } else {
         result[indx]['centroid'];
         return [
             {
@@ -30,7 +33,7 @@ function getBusLocation(data) {
     }
 }
 
-function getBusLocationHistory(data) {
+function getBusLocationHistory(data, kPercentageRule, nCountRule) {
     locaitons = [[], [], [], [], []];
     var curr = Date.now();
     for (let i = 0; i < data.length; i++) {
@@ -52,13 +55,17 @@ function getBusLocationHistory(data) {
 
     var result = [];
     for (let i = 0; i < locaitons.length; i++) {
-        result.push(getBusLocation(locaitons[i])[0]);
+        result.push(getBusLocation(locaitons[i], kPercentageRule)[0]);
     }
     return result;
     //return [{ longitude: 'unknown', latitude: 'unknown' }, {}, {}, {}, {}];
 }
 
-export const calculateLocation = locationData => {
+export const calculateLocation = (
+    locationData,
+    kPercentageRule,
+    nCountRule,
+) => {
     var calculatedLocation = [];
     /*for (let i = 0; i < busData.length; i++) {
         calculatedLocation.push({
@@ -70,7 +77,7 @@ export const calculateLocation = locationData => {
     var i = 0;
     for (var bus in locationData) {
         var busData = locationData[bus];
-        history = getBusLocationHistory(busData);
+        history = getBusLocationHistory(busData, kPercentageRule, nCountRule);
         calculatedLocation.push({
             id: i,
             busName: bus,
