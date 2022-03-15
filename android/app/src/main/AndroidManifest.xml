@@ -33,5 +33,9 @@
             <data android:scheme="CUET-BusKoi" />
         </intent-filter>
       </activity>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBd32I2NAEBeHcaLFGCysn8cnCQtMQiMuU" />
+      <uses-library android:name="org.apache.http.legacy" android:required="false"/>
     </application>
 </manifest>

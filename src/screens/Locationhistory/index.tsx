@@ -13,7 +13,7 @@ import { colorList } from '../../config';
 //import Buslocationlist from '../../component/Buslocationlist';
 import Firebase from '../../config';
 import { getDatabase, onValue, get, ref, child } from 'firebase/database';
-import { getType } from 'react-native-device-info';
+import MapView from './MapView';
 import { calculateLocation } from './locationCalculator';
 function notifyMessage(msg: string) {
     if (Platform.OS === 'android') {
