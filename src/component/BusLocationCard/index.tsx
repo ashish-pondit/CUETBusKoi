@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     SafeAreaView,
     ScrollView,
@@ -18,30 +18,11 @@ interface BusinfoProps {
     time: number;
 }
 
-function getPlaceName(busData: any, time: number) {
-    var loc = busData.location;
-    if (time != -1) {
-        //return loc['longitude'] + ' ' + loc['latitude'];
-        if (loc[time]['longitude'] == 0 || loc[time]['latitude'] == 0)
-            return 'Unknown';
-        else return loc[time]['longitude'] + ' ' + loc[time]['latitude'];
-    } else {
-        for (let i = 0; i < loc.length; i++) {
-            if (loc[i]['longitude'] != 0 && loc[i]['latitude'] != 0) {
-                time = i;
-                return loc[i]['longitude'] + ' ' + loc[i]['latitude'];
-            }
-        }
-        return 'Unknown';
-    }
-}
-
 function getLastTime(busData: any, time: number) {
     var loc = busData.location;
     if (time != -1) {
         if (time == 0) return 'now';
         else return 'update ' + time + ' min ago';
-        return time;
     } else {
         for (let i = 0; i < loc.length; i++) {
             if (loc[i]['longitude'] != 0 && loc[i]['latitude'] != 0) {
@@ -53,6 +34,62 @@ function getLastTime(busData: any, time: number) {
 }
 
 const BusLocationCard = ({ busInfo, time }: BusinfoProps) => {
+    function getPlaceNameFromAPI(lat: number, lon: number) {
+        var requestOptions = {
+            method: 'GET',
+        };
+        fetch(
+            'https://api.geoapify.com/v1/geocode/reverse?lat=' +
+                lat +
+                '&lon=' +
+                lon +
+                '&apiKey=64f418d0c9284a559d444979fa4435b4',
+            requestOptions,
+        )
+            .then(response => response.json())
+            .then(result => {
+                setPlaceFound(true);
+                var place = result['features'][0]['properties'];
+                console.log(place['street'] + ', ' + place['name']);
+                setPlaceName(place['street'] + ', ' + place['name']);
+            })
+            .catch(error => {
+                setPlaceName('Unknown');
+                setPlaceFound(true);
+            });
+    }
+
+    function getPlaceName(busData: any, time: number) {
+        if (placeFound) return;
+        var loc = busData.location;
+        if (time != -1) {
+            //return loc['longitude'] + ' ' + loc['latitude'];
+            if (loc[time]['longitude'] == 0 || loc[time]['latitude'] == 0)
+                return;
+            else {
+                getPlaceNameFromAPI(
+                    loc[time]['latitude'],
+                    loc[time]['longitude'],
+                );
+                return;
+            }
+        } else {
+            for (let i = 0; i < loc.length; i++) {
+                if (loc[i]['longitude'] != 0 && loc[i]['latitude'] != 0) {
+                    time = i;
+                    getPlaceNameFromAPI(
+                        loc[time]['latitude'],
+                        loc[time]['longitude'],
+                    );
+                    return;
+                }
+            }
+        }
+    }
+
+    const [placeFound, setPlaceFound] = useState<boolean>(false);
+    const [placeName, setPlaceName] = useState<string>('Unknown');
+    getPlaceName(busInfo, time);
     // console.log(busInfo);
     return (
         <View style={styles.continer}>
@@ -60,7 +97,7 @@ const BusLocationCard = ({ busInfo, time }: BusinfoProps) => {
                 <Text style={styles.busNameTxt}>{busInfo.busName}</Text>
                 <View style={styles.containerLoc}>
                     <Text style={styles.locationTxt}>
-                        {getPlaceName(busInfo, time)}
+                        {placeFound ? placeName : 'Unknown'}
                     </Text>
                     {time == 0 ? (
                         <Text style={styles.updateTimeTxt}> now</Text>

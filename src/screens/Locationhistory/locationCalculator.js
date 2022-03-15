@@ -14,8 +14,9 @@ function getBusLocation(data, kPercentageRule, nCountRule) {
             indx = i;
         }
     }
+    //console.log(mxL, total);
     if (indx == -1 || mxL < total * kPercentageRule) {
-        //console.log('discarded due to Rules');
+        //   console.log('discarded due to Rules');
         return [
             {
                 longitude: 0,
@@ -55,7 +56,9 @@ function getBusLocationHistory(data, kPercentageRule, nCountRule) {
 
     var result = [];
     for (let i = 0; i < locaitons.length; i++) {
-        result.push(getBusLocation(locaitons[i], kPercentageRule)[0]);
+        result.push(
+            getBusLocation(locaitons[i], kPercentageRule, nCountRule)[0],
+        );
     }
     return result;
     //return [{ longitude: 'unknown', latitude: 'unknown' }, {}, {}, {}, {}];
