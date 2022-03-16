@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     SafeAreaView,
     ScrollView,
@@ -14,18 +14,98 @@ import { spacing, fontConfig, colorList } from '../../config';
 import Icon from 'react-native-vector-icons/Entypo';
 
 interface BusinfoProps {
-    busInfo: { id: number; busName: string; location: string };
+    busInfo: { id: number; busName: string; location: any };
+    time: number;
 }
 
-const BusLocationCard = ({ busInfo }: BusinfoProps) => {
+function getLastTime(busData: any, time: number) {
+    var loc = busData.location;
+    if (time != -1) {
+        if (time == 0) return 'now';
+        else return 'update ' + time + ' min ago';
+    } else {
+        for (let i = 0; i < loc.length; i++) {
+            if (loc[i]['longitude'] != 0 && loc[i]['latitude'] != 0) {
+                if (i == 0) return 'now';
+                else return 'update ' + i + ' min ago';
+            }
+        }
+    }
+}
+
+const BusLocationCard = ({ busInfo, time }: BusinfoProps) => {
+    function getPlaceNameFromAPI(lat: number, lon: number) {
+        var requestOptions = {
+            method: 'GET',
+        };
+        fetch(
+            'https://api.geoapify.com/v1/geocode/reverse?lat=' +
+                lat +
+                '&lon=' +
+                lon +
+                '&apiKey=64f418d0c9284a559d444979fa4435b4',
+            requestOptions,
+        )
+            .then(response => response.json())
+            .then(result => {
+                setPlaceFound(true);
+                var place = result['features'][0]['properties'];
+                console.log(place['street'] + ', ' + place['name']);
+                setPlaceName(place['street'] + ', ' + place['name']);
+            })
+            .catch(error => {
+                setPlaceName('Unknown');
+                setPlaceFound(true);
+            });
+    }
+
+    function getPlaceName(busData: any, time: number) {
+        if (placeFound) return;
+        var loc = busData.location;
+        if (time != -1) {
+            //return loc['longitude'] + ' ' + loc['latitude'];
+            if (loc[time]['longitude'] == 0 || loc[time]['latitude'] == 0)
+                return;
+            else {
+                getPlaceNameFromAPI(
+                    loc[time]['latitude'],
+                    loc[time]['longitude'],
+                );
+                return;
+            }
+        } else {
+            for (let i = 0; i < loc.length; i++) {
+                if (loc[i]['longitude'] != 0 && loc[i]['latitude'] != 0) {
+                    time = i;
+                    getPlaceNameFromAPI(
+                        loc[time]['latitude'],
+                        loc[time]['longitude'],
+                    );
+                    return;
+                }
+            }
+        }
+    }
+
+    const [placeFound, setPlaceFound] = useState<boolean>(false);
+    const [placeName, setPlaceName] = useState<string>('Unknown');
+    getPlaceName(busInfo, time);
     // console.log(busInfo);
     return (
         <View style={styles.continer}>
             <TouchableOpacity style={styles.containerText}>
                 <Text style={styles.busNameTxt}>{busInfo.busName}</Text>
                 <View style={styles.containerLoc}>
-                    <Text style={styles.locationTxt}>{busInfo.location}</Text>
-                    <Text style={styles.updateTimeTxt}>Updated: 2 min ago</Text>
+                    <Text style={styles.locationTxt}>
+                        {placeFound ? placeName : 'Unknown'}
+                    </Text>
+                    {time == 0 ? (
+                        <Text style={styles.updateTimeTxt}> now</Text>
+                    ) : (
+                        <Text style={styles.updateTimeTxt}>
+                            {getLastTime(busInfo, time)}
+                        </Text>
+                    )}
                 </View>
             </TouchableOpacity>
             <TouchableOpacity style={styles.locationIconBox}>

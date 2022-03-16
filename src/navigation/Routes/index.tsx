@@ -7,14 +7,19 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Locationhistory from '../../screens/Locationhistory';
 import BusList from '../../screens/BusInputGrid';
 const Tab = createBottomTabNavigator();
-
+import MapView from '../../screens/Locationhistory/MapView';
 //dummy screens
 
 const About = () => {
     return (
-        <View>
-            <Text>Want to know more about developer? stay tuned</Text>
-        </View>
+        <MapView
+            coords={{
+                longitude: 91.969816,
+                latitude: 22.4616622,
+                accuracy: 90,
+                heading: -1,
+            }}
+        />
     );
 };
 
