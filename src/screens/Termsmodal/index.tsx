@@ -25,11 +25,7 @@ const Termsmodal = ({ onClick, isVisible }) => {
     }, [toggleCheckBox]);
 
     const onSubmit = () => {
-        if (toggleCheckBox) {
-            console.log('async storage goes here');
-        } else {
-            setwarn(true);
-        }
+        onClick();
     };
 
     const onCheck = () => {
@@ -44,104 +40,31 @@ const Termsmodal = ({ onClick, isVisible }) => {
             animationType="slide"
             transparent={true}
             visible={isVisible}
-            onRequestClose={() => {
-                Alert.alert('Modal has been closed.');
-                // setModalVisible(!modalVisible);
-            }}
+            // onRequestClose={() => {
+            //     Alert.alert('Modal has been closed.');
+            //     // setModalVisible(!modalVisible);
+            // }}
         >
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>
-                    <Text style={styles.modalHeaderText}>
-                        Terms & Conditions
-                    </Text>
+                    <Text style={styles.modalHeaderText}>Privacy Policy</Text>
                     <View style={styles.termsContainer}>
                         <ScrollView>
-                            <Text>
-                                These Terms of Service reflect the way Google’s
-                                business works, the laws that apply to our
-                                company, and certain things we’ve always
-                                believed to be true. As a result, these Terms of
-                                Service help define Google’s relationship with
-                                you as you interact with our services. For
-                                example, these terms include the following topic
-                                headings: What you can expect from us, which
-                                describes how we provide and develop our
-                                services What we expect from you, which
-                                establishes certain rules for using our services
-                                Content in Google services, which describes the
-                                intellectual property rights to the content you
-                                find in our services — whether that content
-                                belongs to you, Google, or others In case of
-                                problems or disagreements, which describes other
-                                legal rights you have, and what to expect in
-                                case someone violates these terms Understanding
-                                these terms is important because, by using our
-                                services, you’re agreeing to these terms.
-                                Besides these terms, we also publish a Privacy
-                                Policy. Although it’s not part of these terms,
-                                we encourage you to read it to better understand
-                                how you can update, manage, export, and delete
-                                your information These Terms of Service reflect
-                                the way Google’s business works, the laws that
-                                apply to our company, and certain things we’ve
-                                always believed to be true. As a result, these
-                                Terms of Service help define Google’s
-                                relationship with you as you interact with our
-                                services. For example, these terms include the
-                                following topic headings: What you can expect
-                                from us, which describes how we provide and
-                                develop our services What we expect from you,
-                                which establishes certain rules for using our
-                                services Content in Google services, which
-                                describes the intellectual property rights to
-                                the content you find in our services — whether
-                                that content belongs to you, Google, or others
-                                In case of problems or disagreements, which
-                                describes other legal rights you have, and what
-                                to expect in case someone violates these terms
-                                Understanding these terms is important because,
-                                by using our services, you’re agreeing to these
-                                terms. Besides these terms, we also publish a
-                                Privacy Policy. Although it’s not part of these
-                                terms, we encourage you to read it to better
-                                understand how you can update, manage, export,
-                                and delete your information
+                            <Text style={styles.termsText}>
+                                CUETBusKoi prodives the location of CUET buses
+                                based on users shared location data.
+                            </Text>
+                            <Text style={styles.termsText}>
+                                It is a crowd source based app. So it will
+                                perform better if there are more active users.
+                            </Text>
+                            <Text style={styles.termsText}>
+                                We will collect your location data as long as
+                                you share it. We don't collect anthing other
+                                than location data.
                             </Text>
                         </ScrollView>
                     </View>
-
-                    <View style={styles.checkBoxContainer}>
-                        <TouchableOpacity onPress={() => onCheck()}>
-                            {!toggleCheckBox ? (
-                                <MIcon
-                                    name={'checkbox-blank-outline'}
-                                    size={30}
-                                    color={colorList.primary}
-                                    // style={styles.iconDesign}
-                                />
-                            ) : (
-                                <MIcon
-                                    name={'checkbox-marked'}
-                                    size={30}
-                                    color={colorList.primary}
-                                    // style={styles.iconDesign}
-                                />
-                            )}
-                        </TouchableOpacity>
-                        <Text>
-                            I have read and agree to the terms and conditions
-                            above.
-                        </Text>
-                    </View>
-
-                    {warn ? (
-                        <Text style={styles.submitError}>
-                            You must accept the terms and conditons to continue
-                            to the app.
-                        </Text>
-                    ) : (
-                        <Text style={styles.submitError}></Text>
-                    )}
 
                     <Pressable
                         style={styles.continueButton}
@@ -151,13 +74,7 @@ const Termsmodal = ({ onClick, isVisible }) => {
                             console.log('mu hahaha');
                         }}
                     >
-                        <Text style={styles.buttontextStyle}>Continue</Text>
-                        <Ionicons
-                            name={'md-arrow-forward-circle-outline'}
-                            size={30}
-                            color={colorList.secondary}
-                            style={styles.iconDesign}
-                        />
+                        <Text style={styles.buttontextStyle}>CONTINUE</Text>
                     </Pressable>
                 </View>
             </View>
@@ -176,7 +93,7 @@ const styles = StyleSheet.create({
     },
     modalView: {
         // margin: 20,
-        height: '100%',
+        height: '55%',
         width: '100%',
         backgroundColor: colorList.secondary,
         borderRadius: 20,
@@ -206,28 +123,39 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold',
         textAlign: 'center',
-        fontSize: fontConfig.md + 5,
+        fontSize: fontConfig.md + 1,
     },
     modalHeaderText: {
         fontSize: fontConfig.xlg,
         color: colorList.primary,
+        fontWeight: 'bold',
     },
     termsContainer: {
-        height: '79%',
-        backgroundColor: '#00002230',
+        flex: 1,
+        backgroundColor: 'rgba(255,255,255,0.4)',
+        borderWidth: 1,
+        borderRadius: spacing.md,
+        padding: spacing.lg,
+        margin: spacing.md,
+    },
+    termsText: {
+        textAlign: 'justify',
+        fontSize: fontConfig.md + 3,
+        marginTop: spacing.md,
+        color: colorList.primary,
     },
     continueButton: {
         // width: '50%',
         height: 45,
         backgroundColor: colorList.primary,
         color: colorList.secondary,
-        margin: spacing.sm,
+        margin: spacing.md,
         borderRadius: spacing.sm,
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'row',
-        position: 'absolute',
-        bottom: spacing.md,
+        // position: 'relative',
+        // bottom: spacing.md,
         paddingLeft: spacing.md,
         paddingRight: spacing.md,
     },
