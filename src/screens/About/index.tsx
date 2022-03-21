@@ -18,13 +18,14 @@ import BusButton from '../../component/BusButton';
 const About = () => {
 
     const [name, setName] = React.useState("");
-    const [feedback, setFeedback] = React.useState("Feedback");
+    const [feedback, setFeedback] = React.useState("");
+    const [submitted, setSubmitted] = React.useState(false);
 
     function submitFeedback() {
         var tempName;
 
         if (feedback == "") {
-            setFeedback("");
+            setSubmitted(true);
             setName("");
             return;
         }
@@ -36,6 +37,7 @@ const About = () => {
         ToastAndroid.show("Feedback Submitted", ToastAndroid.SHORT);
         setFeedback("");
         setName("");
+        setSubmitted(false);
 
     }
 
@@ -86,7 +88,7 @@ const About = () => {
                 />
 
                 <TextInput
-                    style={[styles.textInputStyle, { borderColor: (feedback == "" ? 'red' : 'black'), marginBottom: 2 }]}
+                    style={[styles.textInputStyle, { borderColor: ((feedback == "" && submitted) ? 'red' : 'black'), marginBottom: 2 }]}
 
                     multiline
                     numberOfLines={4}
@@ -97,7 +99,7 @@ const About = () => {
                     onChangeText={(text) => setFeedback(text)}
                     value={feedback}
                 />
-                {feedback == "" ? <Text style={{ color: 'red' }}>   *You must fill this field to submit !</Text> : null}
+                {(feedback == "" && submitted) ? <Text style={{ color: 'red' }}>   *You must fill this field to submit !</Text> : null}
                 <View style={styles.buttonStyle}>
                     <Button
                         //disabled={(feedback == "" ? true : false)}
