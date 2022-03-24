@@ -13,6 +13,7 @@ import { colorList } from '../../config';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import Locationhistory from '../../screens/Locationhistory';
+import Mapview from '../../screens/Mapview';
 
 const HStack = createStackNavigator();
 
@@ -45,7 +46,7 @@ const HomeStack = () => {
                 }}
             />
 
-            <HStack.Screen name="Locations" component={Dummy} />
+            <HStack.Screen name="Locations" component={Mapview} />
         </HStack.Navigator>
     );
 };

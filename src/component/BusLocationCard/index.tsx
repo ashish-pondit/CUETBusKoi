@@ -33,7 +33,12 @@ function getLastTime(busData: any, time: number) {
     }
 }
 
-const BusLocationCard = ({ busInfo, time, locationPress }: BusinfoProps) => {
+const BusLocationCard = ({
+    busInfo,
+    time,
+    locationPress,
+    allBus,
+}: BusinfoProps) => {
     function getPlaceNameFromAPI(lat: number, lon: number) {
         var requestOptions = {
             method: 'GET',
@@ -111,7 +116,7 @@ const BusLocationCard = ({ busInfo, time, locationPress }: BusinfoProps) => {
             <TouchableOpacity
                 style={styles.locationIconBox}
                 onPress={() => {
-                    locationPress(busInfo.busName);
+                    locationPress(busInfo, allBus);
                 }}
             >
                 <Icon

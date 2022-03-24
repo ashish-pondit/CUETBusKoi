@@ -20,6 +20,7 @@ function notifyMessage(msg: string) {
         ToastAndroid.show(msg, ToastAndroid.SHORT);
     }
 }
+
 function Locationhistory({ navigation }) {
     const [allBusData, setAllBusData] = React.useState<{ [key: string]: any }>(
         {},
@@ -95,14 +96,15 @@ function Locationhistory({ navigation }) {
                     time={-1}
                     key={i}
                     locationPress={locPress}
+                    allBus={data}
                 />,
             );
         }
         return buslocationList;
     }
     // busData[0]
-    const locationPressed = busName => {
-        navigation.navigate('Locations', busName);
+    const locationPressed = (curbus, allbus) => {
+        navigation.navigate('Locations', { currentBus: curbus, data: allbus });
     };
     return (
         <View style={styles.container}>
