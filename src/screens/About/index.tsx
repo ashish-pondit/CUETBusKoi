@@ -7,38 +7,36 @@ import {
     SafeAreaView,
     StyleSheet,
     Alert,
-    ToastAndroid
+    ToastAndroid,
 } from 'react-native';
-import Firebase, { fontConfig, colorList, spacing } from "../../config/index"
-import CollapsibleView from "@eliav2/react-native-collapsible-view";
+import Firebase, { fontConfig, colorList, spacing } from '../../config/index';
+import CollapsibleView from '@eliav2/react-native-collapsible-view';
 import { getDatabase, ref, set } from 'firebase/database';
 import { getUniqueId } from 'react-native-device-info';
 import BusButton from '../../component/BusButton';
 
 const About = () => {
-
-    const [name, setName] = React.useState("");
-    const [feedback, setFeedback] = React.useState("");
+    const [name, setName] = React.useState('');
+    const [feedback, setFeedback] = React.useState('');
     const [submitted, setSubmitted] = React.useState(false);
 
     function submitFeedback() {
         var tempName;
 
-        if (feedback == "") {
+        if (feedback == '') {
             setSubmitted(true);
-            setName("");
+            setName('');
             return;
         }
 
-        tempName = (name == "") ? "Anonymous" : name
+        tempName = name == '' ? 'Anonymous' : name;
         const db = getDatabase(Firebase);
         const dref = ref(db, 'feedback/' + Date.now());
         set(dref, { name: tempName, feedback: feedback });
-        ToastAndroid.show("Feedback Submitted", ToastAndroid.SHORT);
-        setFeedback("");
-        setName("");
+        ToastAndroid.show('Feedback Submitted', ToastAndroid.SHORT);
+        setFeedback('');
+        setName('');
         setSubmitted(false);
-
     }
 
     return (
@@ -49,11 +47,12 @@ const About = () => {
                 touchableWrapperStyle={styles.wrapperStyle}
                 collapsibleContainerStyle={{}}
                 title={<Text style={styles.titleStyle}>How to Use</Text>}
-
             >
-                <Text>hey there! we believe that you can understand and use this simple app.</Text>
+                <Text>
+                    hey there! we believe that you can understand and use this
+                    simple app.
+                </Text>
             </CollapsibleView>
-
 
             <CollapsibleView
                 style={styles.container}
@@ -74,43 +73,50 @@ const About = () => {
                 collapsibleContainerStyle={{}}
                 title={<Text style={styles.titleStyle}>Contact</Text>}
             >
-
                 <TextInput
                     style={[styles.nameInputStyle]}
                     maxLength={40}
-                    textAlignVertical='top'
-                    placeholder='Name (Optional)'
+                    textAlignVertical="top"
+                    placeholder="Name (Optional)"
                     placeholderTextColor={'gray'}
-                    onChangeText={(text) => setName(text)}
+                    onChangeText={text => setName(text)}
                     value={name}
-
-
                 />
 
                 <TextInput
-                    style={[styles.textInputStyle, { borderColor: ((feedback == "" && submitted) ? 'red' : 'black'), marginBottom: 2 }]}
-
+                    style={[
+                        styles.textInputStyle,
+                        {
+                            borderColor:
+                                feedback == '' && submitted ? 'red' : 'black',
+                            marginBottom: 2,
+                        },
+                    ]}
                     multiline
                     numberOfLines={4}
                     maxLength={150}
-                    textAlignVertical='top'
-                    placeholder='Feedback'
+                    textAlignVertical="top"
+                    placeholder="Feedback"
                     placeholderTextColor={'gray'}
-                    onChangeText={(text) => setFeedback(text)}
+                    onChangeText={text => setFeedback(text)}
                     value={feedback}
                 />
-                {(feedback == "" && submitted) ? <Text style={{ color: 'red' }}>   *You must fill this field to submit !</Text> : null}
+                {feedback == '' && submitted ? (
+                    <Text style={{ color: 'red' }}>
+                        {' '}
+                        *You must fill this field to submit !
+                    </Text>
+                ) : null}
                 <View style={styles.buttonStyle}>
                     <Button
                         //disabled={(feedback == "" ? true : false)}
                         color={colorList.primary}
-                        title='Submit'
+                        title="Submit"
                         onPress={submitFeedback}
                     />
                 </View>
             </CollapsibleView>
         </SafeAreaView>
-
     );
 };
 
@@ -121,11 +127,11 @@ const styles = StyleSheet.create({
         paddingLeft: 50,
         textAlign: 'left',
         alignItems: 'flex-start',
-        backgroundColor: colorList.secondary
+        backgroundColor: colorList.secondary,
     },
     textStyle: {
         fontSize: fontConfig.xxlg,
-        alignSelf: 'center'
+        alignSelf: 'center',
     },
     arrowStyle: {
         color: colorList.primary,
@@ -138,25 +144,24 @@ const styles = StyleSheet.create({
     },
     wrapperStyle: {
         //backgroundColor: 'black',
-        paddingLeft: 10
+        paddingLeft: 10,
     },
     textInputStyle: {
         margin: 10,
         padding: 10,
         borderWidth: 1,
         height: 100,
-        backgroundColor: 'white'
+        backgroundColor: 'white',
     },
     nameInputStyle: {
         margin: 10,
         padding: 10,
         borderWidth: 1,
         height: 40,
-        backgroundColor: 'white'
+        backgroundColor: 'white',
     },
     buttonStyle: {
         marginTop: 20,
         padding: 10,
-
-    }
+    },
 });

@@ -16,17 +16,17 @@ const App = () => {
     const [accepted, setaccepted] = useState(true);
 
     const agreementOnclick = () => {
-        console.log('click hoise sssssssssss');
+        //console.log('click hoise sssssssssss');
         setaccepted(true);
         saveAgreement();
     };
 
     const saveAgreement = async () => {
         try {
-            console.log('baaaaalllllllllllll');
+            //console.log('baaaaalllllllllllll');
             await AsyncStorage.setItem('policy', 'true');
         } catch (e) {
-            console.log('errorrrrrrrrrrrrrrrr');
+            ///console.log('errorrrrrrrrrrrrrrrr');
             console.log(e);
         }
     };
@@ -35,14 +35,14 @@ const App = () => {
         try {
             const savedData = await AsyncStorage.getItem('policy');
             if (savedData) {
-                console.log('printing save data');
-                console.log(savedData);
+                //console.log('printing save data');
+                //console.log(savedData);
                 if (savedData === 'true') {
-                    console.log('yes bro');
-                    console.log(accepted);
+                    //console.log('yes bro');
+                    //console.log(accepted);
                     setaccepted(true);
                 } else {
-                    console.log('no bro');
+                    //console.log('no bro');
                 }
                 // setaccepted(savedData);
             } else {
@@ -54,7 +54,7 @@ const App = () => {
     };
 
     useEffect(() => {
-        console.log('call hoy nai');
+        //console.log('call hoy nai');
         loadAgreement();
     }, []);
 

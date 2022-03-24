@@ -11,6 +11,7 @@ import {
     ImageBackground,
     Alert,
 } from 'react-native';
+import RNDisableBatteryOptimizationsAndroid from 'react-native-disable-battery-optimizations-android';
 import NetInfo from '@react-native-community/netinfo';
 import { useDeviceOrientation } from '@react-native-community/hooks';
 import BusButton from '../../component/BusButton';
@@ -154,6 +155,24 @@ const BusList = () => {
     function updateLocation(name: string) {
         NetInfo.fetch().then(state => {
             if (state.isConnected) {
+                RNDisableBatteryOptimizationsAndroid.isBatteryOptimizationEnabled().then(
+                    (isEnabled: Boolean) => {
+                        console.log('Enabled ' + isEnabled);
+                        if (isEnabled) {
+                            Alert.alert(
+                                'Warning!',
+                                'Please Disable Battery Saver. Otherwise location data will not be shared when display is off',
+                                [
+                                    {
+                                        text: 'OK',
+                                        onPress: () =>
+                                            RNDisableBatteryOptimizationsAndroid.openBatteryModal(),
+                                    },
+                                ],
+                            );
+                        }
+                    },
+                );
                 selectedBusName = name;
                 setBusName(name);
                 toggleBackground(name);
