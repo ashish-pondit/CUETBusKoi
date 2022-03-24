@@ -7,8 +7,11 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Locationhistory from '../../screens/Locationhistory';
 import BusList from '../../screens/BusInputGrid';
 const Tab = createBottomTabNavigator();
-import About from '../../screens/About'
+import About from '../../screens/About';
 import MapView from '../../screens/Locationhistory/MapView';
+
+import HomeStack from '../HomeStack';
+
 //dummy screens
 
 // const About = () => {
@@ -77,8 +80,8 @@ function Routes() {
             >
                 <Tab.Screen
                     name="Homescreen"
-                    component={Locationhistory}
-                    options={{ title: 'Bus Location' }}
+                    component={HomeStack}
+                    options={{ title: 'Bus Location', headerShown: false }}
                 />
                 <Tab.Screen
                     name="Input"

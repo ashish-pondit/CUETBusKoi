@@ -20,7 +20,7 @@ function notifyMessage(msg: string) {
         ToastAndroid.show(msg, ToastAndroid.SHORT);
     }
 }
-function Locationhistory() {
+function Locationhistory({ navigation }) {
     const [allBusData, setAllBusData] = React.useState<{ [key: string]: any }>(
         {},
     );
@@ -30,12 +30,14 @@ function Locationhistory() {
     var dataReceiveInterval = 30000;
     var nCountRule = 3;
     var kPercentageRule = 0.5;
+
     get(child(ref(getDatabase(Firebase)), 'constants/')).then(snapshot => {
         var data = snapshot.val();
         dataReceiveInterval = data['dataReceiveInterval'];
         nCountRule = data['nCountRule'];
         kPercentageRule = data['kPercentageRule'];
     });
+
     var loaded: boolean = false;
     function setFirebaseData() {
         get(child(ref(getDatabase(Firebase)), 'buses/')).then(snapshot => {
@@ -72,6 +74,7 @@ function Locationhistory() {
             //console.log(arr);
         });
     }
+
     React.useEffect(() => {
         if (!loaded) {
             loaded = true;
@@ -82,20 +85,29 @@ function Locationhistory() {
         }, dataReceiveInterval);
         return () => clearInterval(interval);
     }, []);
-    function busList(data: any) {
+
+    function busList(data: any, locPress) {
         let buslocationList = [];
         for (let i = 0; i < data.length; i++) {
             buslocationList.push(
-                <BusLocationCard busInfo={data[i]} time={-1} key={i} />,
+                <BusLocationCard
+                    busInfo={data[i]}
+                    time={-1}
+                    key={i}
+                    locationPress={locPress}
+                />,
             );
         }
         return buslocationList;
     }
     // busData[0]
+    const locationPressed = busName => {
+        navigation.navigate('Locations', busName);
+    };
     return (
         <View style={styles.container}>
             <ScrollView>
-                {busList(allBusData)}
+                {busList(allBusData, locationPressed)}
                 <View style={styles.dummy} />
             </ScrollView>
         </View>
