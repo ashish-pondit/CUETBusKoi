@@ -8,6 +8,7 @@ import {
     StyleSheet,
     Alert,
     ToastAndroid,
+    SectionList
 } from 'react-native';
 import Firebase, { fontConfig, colorList, spacing } from '../../config/index';
 import CollapsibleView from '@eliav2/react-native-collapsible-view';
@@ -40,6 +41,7 @@ const About = () => {
     }
 
     return (
+
         <SafeAreaView>
             <CollapsibleView
                 style={styles.container}
@@ -48,10 +50,27 @@ const About = () => {
                 collapsibleContainerStyle={{}}
                 title={<Text style={styles.titleStyle}>How to Use</Text>}
             >
-                <Text>
-                    hey there! we believe that you can understand and use this
-                    simple app.
-                </Text>
+                <View style={{ paddingLeft: 15, paddingTop: 10, paddingBottom: 10 }}>
+                    <SectionList
+                        sections={[
+                            {
+                                title: 'To View CUET Bus Location-',
+                                data: ['You can find the list of last known locations of CUET buses in the Homepage',
+                                    'Tap on specific bus name to view the location history of that bus',
+                                    'You must have an active internet connection to view bus locations']
+                            },
+                            {
+                                title: 'To Share CUET Bus Location-',
+                                data: ['Go to the Update Location Page',
+                                    'Tap on the bus name to share its location',
+                                    'To stop sharing, tap the stop button',
+                                    'You must have location sharing enabled & active internet connection to share bus location']
+                            },
+                        ]}
+                        renderItem={({ item }) => <Text style={styles.howtoStyle}>{item}</Text>}
+                        renderSectionHeader={({ section }) => <Text style={styles.devName}>{section.title}</Text>}
+                    />
+                </View>
             </CollapsibleView>
 
             <CollapsibleView
@@ -61,9 +80,17 @@ const About = () => {
                 collapsibleContainerStyle={{}}
                 title={<Text style={styles.titleStyle}>Developer Info</Text>}
             >
-                <Text>opu.nahidul@gmail.com</Text>
-                <Text>ashishpondit@gmail.com</Text>
-                <Text>rukon219@gmail.com</Text>
+                <View style={{ paddingLeft: 15, paddingTop: 10, paddingBottom: 10 }}>
+                    <SectionList
+                        sections={[
+                            { title: 'Md. Nahidul Islam Opu', data: ['CSE \'16, CUET', 'Email: opu.nahidul@gmail.com'] },
+                            { title: 'Ashish Pondit', data: ['CSE \'16, CUET', 'Email: ashishpondit@gmail.com'] },
+                            { title: 'Muhammad Eshaque Ali Rukon', data: ['CSE \'16, CUET', 'Email: rukon219@yahoo.com'] }
+                        ]}
+                        renderItem={({ item }) => <Text style={{}}>{item}</Text>}
+                        renderSectionHeader={({ section }) => <Text style={styles.devName}>{section.title}</Text>}
+                    />
+                </View>
             </CollapsibleView>
 
             <CollapsibleView
@@ -144,7 +171,8 @@ const styles = StyleSheet.create({
     },
     wrapperStyle: {
         //backgroundColor: 'black',
-        paddingLeft: 10,
+        paddingLeft: 25,
+        paddingRight: 10
     },
     textInputStyle: {
         margin: 10,
@@ -163,5 +191,20 @@ const styles = StyleSheet.create({
     buttonStyle: {
         marginTop: 20,
         padding: 10,
+
     },
+    devName: {
+        fontWeight: 'bold',
+        fontSize: fontConfig.md + 2,
+        color: 'black',
+    },
+    howtoTitle: {
+        fontSize: fontConfig.lg,
+
+    },
+    howtoStyle: {
+
+    }
 });
+
+
