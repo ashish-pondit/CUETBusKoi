@@ -8,7 +8,8 @@ import {
     StyleSheet,
     Alert,
     ToastAndroid,
-    SectionList
+    SectionList,
+    ScrollView
 } from 'react-native';
 import Firebase, { fontConfig, colorList, spacing } from '../../config/index';
 import CollapsibleView from '@eliav2/react-native-collapsible-view';
@@ -43,106 +44,108 @@ const About = () => {
     return (
 
         <SafeAreaView>
-            <CollapsibleView
-                style={styles.container}
-                arrowStyling={styles.arrowStyle}
-                touchableWrapperStyle={styles.wrapperStyle}
-                collapsibleContainerStyle={{}}
-                title={<Text style={styles.titleStyle}>How to Use</Text>}
-            >
-                <View style={{ paddingLeft: 15, paddingTop: 10, paddingBottom: 10 }}>
-                    <SectionList
-                        sections={[
+            <ScrollView>
+                <CollapsibleView
+                    style={styles.container}
+                    arrowStyling={styles.arrowStyle}
+                    touchableWrapperStyle={styles.wrapperStyle}
+                    collapsibleContainerStyle={{}}
+                    title={<Text style={styles.titleStyle}>How to Use</Text>}
+                >
+                    <View style={{ paddingLeft: 15, paddingTop: 10, paddingBottom: 10 }}>
+                        <SectionList
+                            sections={[
+                                {
+                                    title: 'To View CUET Bus Location-',
+                                    data: ['You can find the list of last known locations of CUET buses in the Homepage',
+                                        'Tap on specific bus name to view the location history of that bus',
+                                        'You must have an active internet connection to view bus locations']
+                                },
+                                {
+                                    title: 'To Share CUET Bus Location-',
+                                    data: ['Go to the Update Location Page',
+                                        'Tap on the bus name to share its location',
+                                        'To stop sharing, tap the stop button',
+                                        'You must have location sharing enabled & active internet connection to share bus location']
+                                },
+                            ]}
+                            renderItem={({ item }) => <Text style={styles.howtoStyle}>{'\u2023' + ' '} {item}</Text>}
+                            renderSectionHeader={({ section }) => <Text style={styles.devName}>{section.title} </Text>}
+                        />
+                    </View>
+                </CollapsibleView>
+
+                <CollapsibleView
+                    style={styles.container}
+                    arrowStyling={styles.arrowStyle}
+                    touchableWrapperStyle={styles.wrapperStyle}
+                    collapsibleContainerStyle={{}}
+                    title={<Text style={styles.titleStyle}>Developer Info</Text>}
+                >
+                    <View style={{ paddingLeft: 15, paddingTop: 10, paddingBottom: 10 }}>
+                        <SectionList
+                            sections={[
+                                { title: 'Md. Nahidul Islam Opu', data: ['CSE \'16, CUET', 'Email: opu.nahidul@gmail.com'] },
+                                { title: 'Ashish Pondit', data: ['CSE \'16, CUET', 'Email: ashishpondit@gmail.com'] },
+                                { title: 'Muhammad Eshaque Ali Rukon', data: ['CSE \'16, CUET', 'Email: rukon219@yahoo.com'] }
+                            ]}
+                            renderItem={({ item }) => <Text style={{}}>{item}</Text>}
+                            renderSectionHeader={({ section }) => <Text style={styles.devName}>{section.title}</Text>}
+                        />
+                    </View>
+                </CollapsibleView>
+
+                <CollapsibleView
+                    style={styles.container}
+                    arrowStyling={styles.arrowStyle}
+                    touchableWrapperStyle={styles.wrapperStyle}
+                    collapsibleContainerStyle={{}}
+                    title={<Text style={styles.titleStyle}>Contact Us</Text>}
+                >
+                    <TextInput
+                        style={[styles.nameInputStyle]}
+                        maxLength={40}
+                        textAlignVertical="top"
+                        placeholder="Name (Optional)"
+                        placeholderTextColor={'gray'}
+                        onChangeText={text => setName(text)}
+                        value={name}
+                    />
+
+                    <TextInput
+                        style={[
+                            styles.textInputStyle,
                             {
-                                title: 'To View CUET Bus Location-',
-                                data: ['You can find the list of last known locations of CUET buses in the Homepage',
-                                    'Tap on specific bus name to view the location history of that bus',
-                                    'You must have an active internet connection to view bus locations']
-                            },
-                            {
-                                title: 'To Share CUET Bus Location-',
-                                data: ['Go to the Update Location Page',
-                                    'Tap on the bus name to share its location',
-                                    'To stop sharing, tap the stop button',
-                                    'You must have location sharing enabled & active internet connection to share bus location']
+                                borderColor:
+                                    feedback == '' && submitted ? 'red' : 'black',
+                                marginBottom: 2,
                             },
                         ]}
-                        renderItem={({ item }) => <Text style={styles.howtoStyle}>{item}</Text>}
-                        renderSectionHeader={({ section }) => <Text style={styles.devName}>{section.title}</Text>}
+                        multiline
+                        numberOfLines={4}
+                        maxLength={150}
+                        textAlignVertical="top"
+                        placeholder="Feedback"
+                        placeholderTextColor={'gray'}
+                        onChangeText={text => setFeedback(text)}
+                        value={feedback}
                     />
-                </View>
-            </CollapsibleView>
-
-            <CollapsibleView
-                style={styles.container}
-                arrowStyling={styles.arrowStyle}
-                touchableWrapperStyle={styles.wrapperStyle}
-                collapsibleContainerStyle={{}}
-                title={<Text style={styles.titleStyle}>Developer Info</Text>}
-            >
-                <View style={{ paddingLeft: 15, paddingTop: 10, paddingBottom: 10 }}>
-                    <SectionList
-                        sections={[
-                            { title: 'Md. Nahidul Islam Opu', data: ['CSE \'16, CUET', 'Email: opu.nahidul@gmail.com'] },
-                            { title: 'Ashish Pondit', data: ['CSE \'16, CUET', 'Email: ashishpondit@gmail.com'] },
-                            { title: 'Muhammad Eshaque Ali Rukon', data: ['CSE \'16, CUET', 'Email: rukon219@yahoo.com'] }
-                        ]}
-                        renderItem={({ item }) => <Text style={{}}>{item}</Text>}
-                        renderSectionHeader={({ section }) => <Text style={styles.devName}>{section.title}</Text>}
-                    />
-                </View>
-            </CollapsibleView>
-
-            <CollapsibleView
-                style={styles.container}
-                arrowStyling={styles.arrowStyle}
-                touchableWrapperStyle={styles.wrapperStyle}
-                collapsibleContainerStyle={{}}
-                title={<Text style={styles.titleStyle}>Contact</Text>}
-            >
-                <TextInput
-                    style={[styles.nameInputStyle]}
-                    maxLength={40}
-                    textAlignVertical="top"
-                    placeholder="Name (Optional)"
-                    placeholderTextColor={'gray'}
-                    onChangeText={text => setName(text)}
-                    value={name}
-                />
-
-                <TextInput
-                    style={[
-                        styles.textInputStyle,
-                        {
-                            borderColor:
-                                feedback == '' && submitted ? 'red' : 'black',
-                            marginBottom: 2,
-                        },
-                    ]}
-                    multiline
-                    numberOfLines={4}
-                    maxLength={150}
-                    textAlignVertical="top"
-                    placeholder="Feedback"
-                    placeholderTextColor={'gray'}
-                    onChangeText={text => setFeedback(text)}
-                    value={feedback}
-                />
-                {feedback == '' && submitted ? (
-                    <Text style={{ color: 'red' }}>
-                        {' '}
-                        *You must fill this field to submit !
-                    </Text>
-                ) : null}
-                <View style={styles.buttonStyle}>
-                    <Button
-                        //disabled={(feedback == "" ? true : false)}
-                        color={colorList.primary}
-                        title="Submit"
-                        onPress={submitFeedback}
-                    />
-                </View>
-            </CollapsibleView>
+                    {feedback == '' && submitted ? (
+                        <Text style={{ color: 'red' }}>
+                            {' '}
+                            *You must fill this field to submit !
+                        </Text>
+                    ) : null}
+                    <View style={styles.buttonStyle}>
+                        <Button
+                            //disabled={(feedback == "" ? true : false)}
+                            color={colorList.primary}
+                            title="Submit"
+                            onPress={submitFeedback}
+                        />
+                    </View>
+                </CollapsibleView>
+            </ScrollView>
         </SafeAreaView>
     );
 };
@@ -200,10 +203,11 @@ const styles = StyleSheet.create({
     },
     howtoTitle: {
         fontSize: fontConfig.lg,
-
+        marginBottom: spacing.sm,
     },
     howtoStyle: {
-
+        paddingLeft: spacing.sm,
+        marginTop: spacing.sm,
     }
 });
 
