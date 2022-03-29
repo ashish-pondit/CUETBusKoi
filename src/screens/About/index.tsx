@@ -52,7 +52,7 @@ const About = () => {
                     collapsibleContainerStyle={{}}
                     title={<Text style={styles.titleStyle}>How to Use</Text>}
                 >
-                    <View style={{ paddingLeft: 15, paddingTop: 10, paddingBottom: 10 }}>
+                    <View style={{ paddingLeft: 15, paddingBottom: 10 }}>
                         <SectionList
                             sections={[
                                 {
@@ -70,7 +70,7 @@ const About = () => {
                                 },
                             ]}
                             renderItem={({ item }) => <Text style={styles.howtoStyle}>{'\u2023' + ' '} {item}</Text>}
-                            renderSectionHeader={({ section }) => <Text style={styles.devName}>{section.title} </Text>}
+                            renderSectionHeader={({ section }) => <Text style={styles.devName}>{'\u25AA' + ' '}{section.title} </Text>}
                         />
                     </View>
                 </CollapsibleView>
@@ -82,7 +82,7 @@ const About = () => {
                     collapsibleContainerStyle={{}}
                     title={<Text style={styles.titleStyle}>Developer Info</Text>}
                 >
-                    <View style={{ paddingLeft: 15, paddingTop: 10, paddingBottom: 10 }}>
+                    <View style={{ paddingLeft: 15, paddingBottom: 10 }}>
                         <SectionList
                             sections={[
                                 { title: 'Md. Nahidul Islam Opu', data: ['CSE \'16, CUET', 'Email: opu.nahidul@gmail.com'] },
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
     },
     wrapperStyle: {
         //backgroundColor: 'black',
-        paddingLeft: 25,
+        paddingLeft: 10,
         paddingRight: 10
     },
     textInputStyle: {
@@ -200,13 +200,14 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: fontConfig.md + 2,
         color: 'black',
+        marginTop: spacing.md,
     },
     howtoTitle: {
         fontSize: fontConfig.lg,
         marginBottom: spacing.sm,
     },
     howtoStyle: {
-        paddingLeft: spacing.sm,
+        paddingLeft: spacing.xlg,
         marginTop: spacing.sm,
     }
 });
