@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     SafeAreaView,
     ScrollView,
@@ -16,18 +16,32 @@ import Icon from 'react-native-vector-icons/Entypo';
 interface BusinfoProps {
     busInfo: { id: number; busName: string; location: any };
     time: number;
+    locationPress: any;
+    allBus: any;
+    onCardPress: any;
 }
 
+var isMapAvailable = false;
 function getLastTime(busData: any, time: number) {
     var loc = busData.location;
     if (time != -1) {
-        if (time == 0) return 'now';
-        else return 'update ' + time + ' min ago';
+        if (time == 0) {
+            isMapAvailable = true;
+            return 'now';
+        } else {
+            isMapAvailable = false;
+            return 'update ' + time + ' min ago';
+        }
     } else {
         for (let i = 0; i < loc.length; i++) {
             if (loc[i]['longitude'] != 0 && loc[i]['latitude'] != 0) {
-                if (i == 0) return 'now';
-                else return 'update ' + i + ' min ago';
+                if (i == 0) {
+                    isMapAvailable = true;
+                    return 'now';
+                } else {
+                    isMapAvailable = false;
+                    return 'update ' + i + ' min ago';
+                }
             }
         }
     }
@@ -38,6 +52,7 @@ const BusLocationCard = ({
     time,
     locationPress,
     allBus,
+    onCardPress,
 }: BusinfoProps) => {
     function getPlaceNameFromAPI(lat: number, lon: number) {
         var requestOptions = {
@@ -65,13 +80,14 @@ const BusLocationCard = ({
     }
 
     function getPlaceName(busData: any, time: number) {
-        if (placeFound) return;
         var loc = busData.location;
         if (time != -1) {
             //return loc['longitude'] + ' ' + loc['latitude'];
-            if (loc[time]['longitude'] == 0 || loc[time]['latitude'] == 0)
+            if (loc[time]['longitude'] == 0 || loc[time]['latitude'] == 0) {
+                setPlaceName('Unknown');
+                setPlaceFound(true);
                 return;
-            else {
+            } else {
                 getPlaceNameFromAPI(
                     loc[time]['latitude'],
                     loc[time]['longitude'],
@@ -90,41 +106,51 @@ const BusLocationCard = ({
                 }
             }
         }
+        setPlaceName('Unknown');
+        setPlaceFound(true);
     }
 
     const [placeFound, setPlaceFound] = useState<boolean>(false);
     const [placeName, setPlaceName] = useState<string>('Unknown');
-    getPlaceName(busInfo, time);
+
+    useEffect(() => {
+        getPlaceName(busInfo, time);
+    }, []);
     // console.log(busInfo);
     return (
         <View style={styles.continer}>
-            <TouchableOpacity style={styles.containerText}>
+            <TouchableOpacity
+                style={styles.containerText}
+                onPress={() => {
+                    console.log('press');
+                    onCardPress(busInfo, allBus);
+                }}
+            >
                 <Text style={styles.busNameTxt}>{busInfo.busName}</Text>
                 <View style={styles.containerLoc}>
                     <Text style={styles.locationTxt}>
                         {placeFound ? placeName : 'Unknown'}
                     </Text>
-                    {time == 0 ? (
-                        <Text style={styles.updateTimeTxt}> now</Text>
-                    ) : (
-                        <Text style={styles.updateTimeTxt}>
-                            {getLastTime(busInfo, time)}
-                        </Text>
-                    )}
+
+                    <Text style={styles.updateTimeTxt}>
+                        {getLastTime(busInfo, time)}
+                    </Text>
                 </View>
             </TouchableOpacity>
-            <TouchableOpacity
-                style={styles.locationIconBox}
-                onPress={() => {
-                    locationPress(busInfo, allBus);
-                }}
-            >
-                <Icon
-                    name="location"
-                    size={35}
-                    color={colorList.primaryXsoft}
-                />
-            </TouchableOpacity>
+            {isMapAvailable == true && placeName != 'Unknown' ? (
+                <TouchableOpacity
+                    style={styles.locationIconBox}
+                    onPress={() => {
+                        locationPress(busInfo, allBus);
+                    }}
+                >
+                    <Icon
+                        name="location"
+                        size={35}
+                        color={colorList.primaryXsoft}
+                    />
+                </TouchableOpacity>
+            ) : null}
         </View>
     );
 };

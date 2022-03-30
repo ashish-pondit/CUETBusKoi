@@ -14,6 +14,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import Locationhistory from '../../screens/Locationhistory';
 import Mapview from '../../screens/Mapview';
+import AllLocations from '../../screens/AllLocations';
 
 const HStack = createStackNavigator();
 
@@ -47,6 +48,8 @@ const HomeStack = () => {
             />
 
             <HStack.Screen name="Locations" component={Mapview} />
+
+            <HStack.Screen name="Location History" component={AllLocations} />
         </HStack.Navigator>
     );
 };

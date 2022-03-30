@@ -87,7 +87,11 @@ function Locationhistory({ navigation }) {
         return () => clearInterval(interval);
     }, []);
 
-    function busList(data: any, locPress) {
+    function busList(
+        data: any,
+        locPress: (curbus: any, allbus: any) => void,
+        cardPress: (curbus: any, allbus: any) => void,
+    ) {
         let buslocationList = [];
         for (let i = 0; i < data.length; i++) {
             buslocationList.push(
@@ -96,6 +100,7 @@ function Locationhistory({ navigation }) {
                     time={-1}
                     key={i}
                     locationPress={locPress}
+                    onCardPress={cardPress}
                     allBus={data}
                 />,
             );
@@ -103,13 +108,21 @@ function Locationhistory({ navigation }) {
         return buslocationList;
     }
     // busData[0]
-    const locationPressed = (curbus, allbus) => {
+
+    const cardPressed = (curbus: any, allbus: any) => {
+        console.log('card pressed');
+        navigation.navigate('Location History', {
+            currentBus: curbus,
+            data: allbus,
+        });
+    };
+    const locationPressed = (curbus: any, allbus: any) => {
         navigation.navigate('Locations', { currentBus: curbus, data: allbus });
     };
     return (
         <View style={styles.container}>
             <ScrollView>
-                {busList(allBusData, locationPressed)}
+                {busList(allBusData, locationPressed, cardPressed)}
                 <View style={styles.dummy} />
             </ScrollView>
         </View>

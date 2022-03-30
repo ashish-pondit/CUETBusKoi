@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
+    Button,
     SafeAreaView,
     ScrollView,
     StatusBar,
@@ -12,6 +13,7 @@ import { colorList, spacing } from '../../config';
 
 import RNMapView, { Circle, Marker } from 'react-native-maps';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Warningmessage = () => {
     return (
@@ -31,16 +33,16 @@ const Mapview = ({ route }) => {
     console.log('all data');
     console.log(data[0].location[0].latitude);
     const curBusname = currentBus.busName;
-
+    var targetBusdata;
     const mapRef = useRef(null);
 
     const markerList = (alldata, target) => {
         var markerArray = [];
-        var targetBusdata = alldata[0];
+        targetBusdata = alldata[0];
         let i = 0;
         for (i = 0; i < alldata.length; i++) {
-            console.log('why this colabary');
-            console.log(alldata[i]);
+            //console.log('why this colabary');
+            //console.log(alldata[i]);
 
             // console.log('printing console logic ');
             // console.log(alldata[i].busName);
@@ -101,14 +103,14 @@ const Mapview = ({ route }) => {
             }
         }
 
-        console.log('printing markerlist array output');
-        console.log(markerArray);
-        console.log('checking again bus name');
-        console.log(targetBusdata);
+        //console.log('printing markerlist array output');
+        //console.log(markerArray);
+        //console.log('checking again bus name');
+        //console.log(targetBusdata);
 
-        markerArray.push(
+        markerArray.unshift(
             <Marker
-                anchor={{ x: 0.5, y: 0.65 }}
+                anchor={{ x: 0.5, y: 0.5 }}
                 coordinate={{
                     latitude: targetBusdata.location[0].latitude,
                     longitude: targetBusdata.location[0].longitude,
@@ -122,15 +124,14 @@ const Mapview = ({ route }) => {
                         </Text>
                     </View>
                     <View style={styles.markerJoin} />
-                    <View style={styles.dotGreen}>
-                        {/* <Text>padma</Text> */}
-                    </View>
+                    <View style={styles.dotGreen}></View>
                 </View>
             </Marker>,
         );
 
         return markerArray;
     };
+    const mrkrLst = markerList(data, curBusname);
 
     return (
         <View style={{ flex: 1 }}>
@@ -155,9 +156,25 @@ const Mapview = ({ route }) => {
                     style={StyleSheet.absoluteFillObject}
                     rotateEnabled={false}
                 >
-                    {markerList(data, curBusname)}
+                    {mrkrLst}
                 </RNMapView>
             )}
+
+            <MaterialCommunityIcons
+                style={styles.gps}
+                size={50}
+                name="bus"
+                onPress={() =>
+                    mapRef.current.animateCamera({
+                        center: {
+                            latitude: targetBusdata.location[0].latitude,
+                            longitude: targetBusdata.location[0].longitude,
+                        },
+                        heading: 0,
+                        zoom: 16,
+                    })
+                }
+            />
         </View>
     );
 };
@@ -236,6 +253,15 @@ const styles = StyleSheet.create({
         height: 10,
         width: 5,
         backgroundColor: colorList.primary,
+    },
+    gps: {
+        position: 'absolute',
+        top: 5,
+        right: 5,
+        borderWidth: 0.5,
+        borderRadius: 5,
+        backgroundColor: 'white',
+        color: colorList.primary,
     },
 });
 
