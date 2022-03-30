@@ -26,12 +26,12 @@ const Warningmessage = () => {
 };
 
 const Mapview = ({ route }) => {
-    console.log('printing inside map view');
-    // console.log(route.params);
+    //console.log('printing inside map view');
+    ////console.log(route.params);
     const { currentBus, data } = route.params;
-    console.log(currentBus);
-    console.log('all data');
-    console.log(data[0].location[0].latitude);
+    //console.log(currentBus);
+    //console.log('all data');
+    //console.log(data[0].location[0].latitude);
     const curBusname = currentBus.busName;
     var targetBusdata;
     const mapRef = useRef(null);
@@ -44,9 +44,9 @@ const Mapview = ({ route }) => {
             //console.log('why this colabary');
             //console.log(alldata[i]);
 
-            // console.log('printing console logic ');
-            // console.log(alldata[i].busName);
-            // console.log(alldata[i].busName === target);
+            ////console.log('printing console logic ');
+            ////console.log(alldata[i].busName);
+            ////console.log(alldata[i].busName === target);
 
             if (
                 alldata[i].location[0].latitude !== 0 &&

@@ -27,7 +27,7 @@ const App = () => {
             await AsyncStorage.setItem('policy', 'true');
         } catch (e) {
             ///console.log('errorrrrrrrrrrrrrrrr');
-            console.log(e);
+            //console.log(e);
         }
     };
 
@@ -49,7 +49,7 @@ const App = () => {
                 setaccepted(false);
             }
         } catch (e) {
-            console.log(e);
+            //console.log(e);
         }
     };
 

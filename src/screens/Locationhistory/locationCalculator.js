@@ -16,7 +16,7 @@ function getBusLocation(data, kPercentageRule, nCountRule) {
     }
     //console.log(mxL, total);
     if (indx == -1 || mxL < total * kPercentageRule) {
-        //   console.log('discarded due to Rules');
+        //  //console.log('discarded due to Rules');
         return [
             {
                 longitude: 0,

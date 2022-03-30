@@ -110,11 +110,11 @@ export const getLocation = async () => {
 
     Geolocation.getCurrentPosition(
         position => {
-            console.log(position);
+            //console.log(position);
         },
         error => {
             Alert.alert(`Code ${error.code}`, error.message);
-            console.log(error);
+            //console.log(error);
         },
         {
             accuracy: {

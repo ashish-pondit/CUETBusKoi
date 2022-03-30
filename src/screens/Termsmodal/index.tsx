@@ -71,7 +71,7 @@ const Termsmodal = ({ onClick, isVisible }) => {
                         onPress={() => {
                             // onClick(false);
                             onSubmit();
-                            console.log('mu hahaha');
+                            //console.log('mu hahaha');
                         }}
                     >
                         <Text style={styles.buttontextStyle}>CONTINUE</Text>

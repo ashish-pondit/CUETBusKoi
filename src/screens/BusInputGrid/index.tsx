@@ -26,7 +26,7 @@ import { getBackgroundConfig } from '../../config';
 import Firebase from '../../config';
 //import MapView from './MapView';
 BackgroundJob.on('expiration', () => {
-    console.log('iOS: I am being closed!');
+    //console.log('iOS: I am being closed!');
 });
 
 Linking.addEventListener('url', handleOpenURL);
@@ -72,15 +72,15 @@ const BusList = () => {
         playing = !playing;
         if (playing) {
             try {
-                console.log('Trying to start background service');
+                //console.log('Trying to start background service');
                 var options = getBackgroundConfig(name);
                 await BackgroundJob.start(getLocationUpdates, options);
-                console.log('Successful start!');
+                //console.log('Successful start!');
             } catch (e) {
-                console.log('Error', e);
+                //console.log('Error', e);
             }
         } else {
-            console.log('Stop background service');
+            //console.log('Stop background service');
             removeLocationUpdates();
             await BackgroundJob.stop();
         }
@@ -119,7 +119,7 @@ const BusList = () => {
                     storeLocation(position);
                 },
                 error => {
-                    console.log(error);
+                    //console.log(error);
                 },
                 {
                     accuracy: {
@@ -157,7 +157,7 @@ const BusList = () => {
             if (state.isConnected) {
                 RNDisableBatteryOptimizationsAndroid.isBatteryOptimizationEnabled().then(
                     (isEnabled: Boolean) => {
-                        console.log('Enabled ' + isEnabled);
+                        //console.log('Enabled ' + isEnabled);
                         if (isEnabled) {
                             Alert.alert(
                                 'Warning!',

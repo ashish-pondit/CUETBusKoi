@@ -13,6 +13,21 @@ import {
 import { spacing, fontConfig, colorList } from '../../config';
 import Icon from 'react-native-vector-icons/Entypo';
 
+import Firebase from '../../config';
+import { getDatabase, set, get, ref, child } from 'firebase/database';
+
+function storeLocationNameFb(latlon: string, street: string, place: string) {
+    latlon = latlon.replace('.', '_');
+    latlon = latlon.replace('.', '_');
+    var data = {
+        place: place,
+        street: street,
+    };
+    const db = getDatabase(Firebase);
+    const dref = ref(db, 'ReverseGeocoding/' + latlon);
+    set(dref, data);
+}
+
 interface BusinfoProps {
     busInfo: { id: number; busName: string; location: any };
     time: number;
@@ -55,28 +70,58 @@ const BusLocationCard = ({
     onCardPress,
 }: BusinfoProps) => {
     function getPlaceNameFromAPI(lat: number, lon: number) {
-        var requestOptions = {
-            method: 'GET',
-        };
-        fetch(
-            'https://api.geoapify.com/v1/geocode/reverse?lat=' +
-                lat +
-                '&lon=' +
-                lon +
-                '&apiKey=64f418d0c9284a559d444979fa4435b4',
-            requestOptions,
-        )
-            .then(response => response.json())
-            .then(result => {
+        //console.log('wating for Firebase');
+        var latlon = lat.toPrecision(6) + ',' + lon.toPrecision(6);
+        latlon = latlon.replace('.', '_');
+        latlon = latlon.replace('.', '_');
+
+        get(
+            child(ref(getDatabase(Firebase)), 'ReverseGeocoding/' + latlon),
+        ).then(snapshot => {
+            var data = snapshot.val();
+            try {
+                var placename = data['street'] + ',' + data['place'];
+                setPlaceName(placename);
                 setPlaceFound(true);
-                var place = result['features'][0]['properties'];
-                //console.log(place['street'] + ', ' + place['name']);
-                setPlaceName(place['street'] + ', ' + place['name']);
-            })
-            .catch(error => {
-                setPlaceName('Unknown');
-                setPlaceFound(true);
-            });
+                //console.log('Reverse Geocoding using Firebase');
+            } catch {
+                //console.log('not found. Reverse Geocoding using geoapify');
+                var requestOptions = {
+                    method: 'GET',
+                };
+                fetch(
+                    'https://api.geoapify.com/v1/geocode/reverse?lat=' +
+                        lat +
+                        '&lon=' +
+                        lon +
+                        '&apiKey=64f418d0c9284a559d444979fa4435b4',
+                    requestOptions,
+                )
+                    .then(response => response.json())
+                    .then(result => {
+                        setPlaceFound(true);
+                        var place = result['features'][0]['properties'];
+                        //console.log(place['street'] + ', ' + place['name']);
+                        setPlaceName(place['street'] + ', ' + place['name']);
+                        storeLocationNameFb(
+                            lat.toPrecision(6) + ',' + lon.toPrecision(6),
+                            place['street'],
+                            place['name'],
+                        );
+                    })
+                    .catch(error => {
+                        setPlaceName(
+                            lat.toFixed(4) +
+                                String.fromCharCode(176) +
+                                'N, ' +
+                                lon.toFixed(4) +
+                                String.fromCharCode(176) +
+                                'E',
+                        );
+                        setPlaceFound(true);
+                    });
+            }
+        });
     }
 
     function getPlaceName(busData: any, time: number) {
@@ -94,7 +139,7 @@ const BusLocationCard = ({
                 );
                 return;
             }
-        } else {
+        } else if (time === -1) {
             for (let i = 0; i < loc.length; i++) {
                 if (loc[i]['longitude'] != 0 && loc[i]['latitude'] != 0) {
                     time = i;
@@ -105,9 +150,10 @@ const BusLocationCard = ({
                     return;
                 }
             }
+        } else {
+            setPlaceName('Unknown');
+            setPlaceFound(true);
         }
-        setPlaceName('Unknown');
-        setPlaceFound(true);
     }
 
     const [placeFound, setPlaceFound] = useState<boolean>(false);
@@ -116,13 +162,13 @@ const BusLocationCard = ({
     useEffect(() => {
         getPlaceName(busInfo, time);
     }, []);
-    // console.log(busInfo);
+    ////console.log(busInfo);
     return (
         <View style={styles.continer}>
             <TouchableOpacity
                 style={styles.containerText}
                 onPress={() => {
-                    console.log(allBus);
+                    //console.log(allBus);
                     onCardPress(busInfo, allBus);
                 }}
             >

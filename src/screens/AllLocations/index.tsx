@@ -13,7 +13,7 @@ import Locationhistory from '../Locationhistory';
 
 function AllLocations({ navigation, route }) {
     const { currentBus, allBusData } = route.params;
-    console.log(allBusData);
+    //console.log(allBusData);
     function locationPressed() {
         navigation.navigate('Locations', {
             currentBus: currentBus,
