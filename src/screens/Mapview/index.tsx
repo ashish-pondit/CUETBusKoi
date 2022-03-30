@@ -163,7 +163,7 @@ const Mapview = ({ route }) => {
             <MaterialCommunityIcons
                 style={styles.gps}
                 size={50}
-                name="bus"
+                name="crosshairs-gps"
                 onPress={() =>
                     mapRef.current.animateCamera({
                         center: {
@@ -256,8 +256,8 @@ const styles = StyleSheet.create({
     },
     gps: {
         position: 'absolute',
-        top: 5,
-        right: 5,
+        bottom: 70,
+        right: 10,
         borderWidth: 0.5,
         borderRadius: 5,
         backgroundColor: 'white',

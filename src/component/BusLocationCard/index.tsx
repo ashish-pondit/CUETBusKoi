@@ -45,7 +45,7 @@ function getLastTime(busData: any, time: number) {
             return 'now';
         } else {
             isMapAvailable = false;
-            return 'update ' + time + ' min ago';
+            return 'updated ' + time + ' min ago';
         }
     } else {
         for (let i = 0; i < loc.length; i++) {
@@ -55,7 +55,7 @@ function getLastTime(busData: any, time: number) {
                     return 'now';
                 } else {
                     isMapAvailable = false;
-                    return 'update ' + i + ' min ago';
+                    return 'updated ' + i + ' min ago';
                 }
             }
         }
@@ -85,7 +85,7 @@ const BusLocationCard = ({
                 setPlaceFound(true);
                 //console.log('Reverse Geocoding using Firebase');
             } catch {
-                //console.log('not found. Reverse Geocoding using geoapify');
+                //console.log('not found on Firebase. Reverse Geocoding using geoapify');
                 var requestOptions = {
                     method: 'GET',
                 };
@@ -128,7 +128,7 @@ const BusLocationCard = ({
         var loc = busData.location;
         if (time != -1) {
             //return loc['longitude'] + ' ' + loc['latitude'];
-            if (loc[time]['longitude'] == 0 || loc[time]['latitude'] == 0) {
+            if (loc[time]['longitude'] === 0 || loc[time]['latitude'] === 0) {
                 setPlaceName('Unknown');
                 setPlaceFound(true);
                 return;
@@ -140,7 +140,8 @@ const BusLocationCard = ({
                 return;
             }
         } else if (time === -1) {
-            for (let i = 0; i < loc.length; i++) {
+            var i = 0;
+            for (; i < loc.length; i++) {
                 if (loc[i]['longitude'] != 0 && loc[i]['latitude'] != 0) {
                     time = i;
                     getPlaceNameFromAPI(
@@ -150,18 +151,18 @@ const BusLocationCard = ({
                     return;
                 }
             }
-        } else {
-            setPlaceName('Unknown');
-            setPlaceFound(true);
+            if (i == 5) {
+                setPlaceName('Unknown');
+                setPlaceFound(true);
+            }
         }
     }
 
     const [placeFound, setPlaceFound] = useState<boolean>(false);
     const [placeName, setPlaceName] = useState<string>('Unknown');
-
     useEffect(() => {
         getPlaceName(busInfo, time);
-    }, []);
+    }, [busInfo]);
     ////console.log(busInfo);
     return (
         <View style={styles.continer}>
