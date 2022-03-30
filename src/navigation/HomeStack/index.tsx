@@ -47,9 +47,8 @@ const HomeStack = () => {
                 }}
             />
 
+            <HStack.Screen name="History" component={AllLocations} />
             <HStack.Screen name="Locations" component={Mapview} />
-
-            <HStack.Screen name="Location History" component={AllLocations} />
         </HStack.Navigator>
     );
 };

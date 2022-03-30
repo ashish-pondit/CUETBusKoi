@@ -70,7 +70,7 @@ const BusLocationCard = ({
             .then(result => {
                 setPlaceFound(true);
                 var place = result['features'][0]['properties'];
-                console.log(place['street'] + ', ' + place['name']);
+                //console.log(place['street'] + ', ' + place['name']);
                 setPlaceName(place['street'] + ', ' + place['name']);
             })
             .catch(error => {
@@ -122,7 +122,7 @@ const BusLocationCard = ({
             <TouchableOpacity
                 style={styles.containerText}
                 onPress={() => {
-                    console.log('press');
+                    console.log(allBus);
                     onCardPress(busInfo, allBus);
                 }}
             >

@@ -111,9 +111,9 @@ function Locationhistory({ navigation }) {
 
     const cardPressed = (curbus: any, allbus: any) => {
         console.log('card pressed');
-        navigation.navigate('Location History', {
+        navigation.navigate('History', {
             currentBus: curbus,
-            data: allbus,
+            allBusData: allBusData,
         });
     };
     const locationPressed = (curbus: any, allbus: any) => {

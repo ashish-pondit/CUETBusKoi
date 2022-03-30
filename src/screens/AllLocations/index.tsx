@@ -11,13 +11,16 @@ import BusLocationCard from '../../component/BusLocationCard';
 import Firebase, { colorList } from '../../config';
 import Locationhistory from '../Locationhistory';
 
-function AllLocations({ route }) {
+function AllLocations({ navigation, route }) {
     const { currentBus, allBusData } = route.params;
-
-    const locationPressed = (curbus: any, allbus: any) => {
-        route.navigate('Locations', { currentBus: curbus, data: allbus });
-    };
-    function busList(data: any, locPress: (curbus: any, allbus: any) => void) {
+    console.log(allBusData);
+    function locationPressed() {
+        navigation.navigate('Locations', {
+            currentBus: currentBus,
+            data: allBusData,
+        });
+    }
+    function busList(data: any) {
         let buslocationList = [];
         for (let i = 0; i < 5; i++) {
             buslocationList.push(
@@ -25,9 +28,9 @@ function AllLocations({ route }) {
                     busInfo={currentBus}
                     time={i}
                     key={i}
-                    locationPress={locPress}
+                    locationPress={() => locationPressed()}
                     onCardPress={() => {}}
-                    allBus={data}
+                    allBus={allBusData}
                 />,
             );
         }
@@ -36,7 +39,7 @@ function AllLocations({ route }) {
     return (
         <View style={styles.container}>
             <ScrollView>
-                {busList(allBusData, locationPressed)}
+                {busList(allBusData)}
                 <View style={styles.dummy} />
             </ScrollView>
         </View>
