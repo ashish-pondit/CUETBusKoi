@@ -51,16 +51,16 @@ const Termsmodal = ({ onClick, isVisible }) => {
                     <View style={styles.termsContainer}>
                         <ScrollView>
                             <Text style={styles.termsText}>
-                                CUETBusKoi prodives the location of CUET buses
-                                based on users shared location data.
+                                CUETBusKoi provides the location of CUET buses
+                                based on users' shared location data.
                             </Text>
                             <Text style={styles.termsText}>
-                                It is a crowd source based app. So it will
+                                It is a crowd source-based app. So it will
                                 perform better if there are more active users.
                             </Text>
                             <Text style={styles.termsText}>
                                 We will collect your location data as long as
-                                you share it. We don't collect anthing other
+                                you share it. We don't collect anything other
                                 than location data.
                             </Text>
                         </ScrollView>
