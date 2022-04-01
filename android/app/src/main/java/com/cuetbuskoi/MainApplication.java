@@ -1,4 +1,4 @@
-package com.cuetbuskoi;
+package com.cuet.buskoi;
 
 import android.app.Application;
 import android.content.Context;

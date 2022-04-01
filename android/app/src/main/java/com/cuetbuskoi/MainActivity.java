@@ -1,4 +1,4 @@
-package com.cuetbuskoi;
+package com.cuet.buskoi;
 
 import com.facebook.react.ReactActivity;
 import android.os.Bundle;
