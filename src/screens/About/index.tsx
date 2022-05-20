@@ -123,7 +123,7 @@ const About = () => {
                         ]}
                         multiline
                         numberOfLines={4}
-                        maxLength={150}
+                        maxLength={1000}
                         textAlignVertical="top"
                         placeholder="Feedback"
                         placeholderTextColor={'gray'}
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
         thickness: 2,
     },
     titleStyle: {
-        color: 'blue',
+        color: colorList.primary,
         fontSize: fontConfig.md,
         fontWeight: 'bold',
     },

@@ -24,6 +24,7 @@ import { hasLocationPermission } from './locationManager';
 import BackgroundJob from 'react-native-background-actions';
 import { getBackgroundConfig } from '../../config';
 import Firebase from '../../config';
+import { ScrollView } from 'react-native-gesture-handler';
 //import MapView from './MapView';
 BackgroundJob.on('expiration', () => {
     //console.log('iOS: I am being closed!');
@@ -213,26 +214,29 @@ const BusList = () => {
                 <View>
                     <Text
                         style={[
-                            { marginTop: landscape ? 0 : 50 },
+                            { marginTop: landscape ? 0 : 25, marginBottom: 25 },
                             styles.titleStyle,
                         ]}
                     >
                         Select Bus
                     </Text>
-                    <FlatList
-                        style={{ marginTop: landscape ? 0 : 20 }}
-                        data={busData}
-                        renderItem={({ item }) => (
-                            <View style={styles.itemContainer}>
-                                <BusButton
-                                    title={item.busName}
-                                    onPressButton={updateLocation}
-                                />
-                            </View>
-                        )}
-                        numColumns={2}
+                    <ScrollView>
+                        <FlatList
+                            style={[styles.flatScreenStyle]}
+                            data={busData}
+                            renderItem={({ item }) => (
+                                <View style={styles.itemContainer}>
+                                    <BusButton
+                                        title={item.busName}
+                                        onPressButton={updateLocation}
+                                    />
+                                </View>
+                            )}
+                            numColumns={2}
                         // keyExtractor={item => item.id}
-                    />
+                        />
+                    </ScrollView>
+
                 </View>
             )}
         </SafeAreaView>
@@ -251,6 +255,7 @@ const styles = StyleSheet.create({
         flex: 1,
         margin: 3,
         flexDirection: 'column',
+        backgroundColor: colorList.secondary
     },
     titleStyle: {
         fontSize: fontConfig.xxlg,
@@ -282,4 +287,10 @@ const styles = StyleSheet.create({
         height: 250,
         width: 250,
     },
+    flatScreenStyle: {
+        padding: 10,
+        paddingBottom: 50,
+        marginBottom: 70,
+        backgroundColor: colorList.secondary,
+    }
 });
