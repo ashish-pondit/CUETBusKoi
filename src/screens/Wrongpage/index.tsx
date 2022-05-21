@@ -34,7 +34,7 @@ const Wrongpage = ({ route, navigation }) => {
             </Text>
             {nextSchedule['start'] ? (
                 <Text style={styles.textSecondary}>
-                    Next bus is scheduled at: {nextSchedule['start'] % 12}{' '}
+                    The next bus scheduled is at: {nextSchedule['start'] % 12}{' '}
                     {nextSchedule['start'] > 12 ? 'PM' : 'AM'}
                 </Text>
             ) : null}

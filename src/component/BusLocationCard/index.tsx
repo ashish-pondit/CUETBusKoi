@@ -235,6 +235,8 @@ const styles = StyleSheet.create({
     locationTxt: {
         fontSize: fontConfig.lg,
         color: colorList.primary,
+        maxWidth: '85%',
+        minWidth: '85%',
     },
     updateTimeTxt: {
         fontSize: fontConfig.sm,
