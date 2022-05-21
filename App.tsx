@@ -12,8 +12,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Routes from './src/navigation/Routes';
 import Termsmodal from './src/screens/Termsmodal';
+// import { daydata } from './src/data/weekday.json';
 const App = () => {
     const [accepted, setaccepted] = useState(true);
+
+    // console.log('ffffffffffff ');
+    // console.log(daydata);
 
     const agreementOnclick = () => {
         //console.log('click hoise sssssssssss');

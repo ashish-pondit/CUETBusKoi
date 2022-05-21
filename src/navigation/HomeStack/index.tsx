@@ -18,16 +18,6 @@ import AllLocations from '../../screens/AllLocations';
 
 const HStack = createStackNavigator();
 
-function Dummy({ route }) {
-    //console.log('printing inside dummy screen');
-    //console.log(route.params);
-    return (
-        <View>
-            <Text>What is this socary?</Text>
-        </View>
-    );
-}
-
 const HomeStack = () => {
     return (
         <HStack.Navigator

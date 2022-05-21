@@ -12,7 +12,7 @@
         },
         {
             "id": 3,
-            "busName": "হালদা",
+            "busName": "মধুমতি",
             "location": "Lalkhan Bazar"
         },
         {
@@ -32,12 +32,32 @@
         },
         {
             "id": 7,
-            "busName": "ব্রহ্মপুত্র",
+            "busName": "রুপসা",
             "location": "Kuaish"
         },
         {
             "id": 8,
             "busName": "বুড়িগঙ্গা",
+            "location": "Bahaddarhat"
+        },
+        {
+            "id": 9,
+            "busName": "গোমতি",
+            "location": "Bahaddarhat"
+        },
+        {
+            "id": 10,
+            "busName": "সাঙ্গু",
+            "location": "Bahaddarhat"
+        },
+        {
+            "id": 11,
+            "busName": "তিস্তা",
+            "location": "Bahaddarhat"
+        },
+        {
+            "id": 12,
+            "busName": "ইছামতি",
             "location": "Bahaddarhat"
         }
     ]
