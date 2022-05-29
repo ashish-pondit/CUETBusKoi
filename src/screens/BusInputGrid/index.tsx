@@ -214,7 +214,9 @@ const BusList = () => {
                 <View>
                     <Text
                         style={[
-                            { marginTop: landscape ? 0 : 25, marginBottom: 25 },
+                            {
+                                /* marginTop: landscape ? 0 : 25, marginBottom: 25*/
+                            },
                             styles.titleStyle,
                         ]}
                     >
@@ -233,10 +235,9 @@ const BusList = () => {
                                 </View>
                             )}
                             numColumns={2}
-                        // keyExtractor={item => item.id}
+                            // keyExtractor={item => item.id}
                         />
                     </ScrollView>
-
                 </View>
             )}
         </SafeAreaView>
@@ -255,7 +256,7 @@ const styles = StyleSheet.create({
         flex: 1,
         margin: 3,
         flexDirection: 'column',
-        backgroundColor: colorList.secondary
+        backgroundColor: colorList.secondary,
     },
     titleStyle: {
         fontSize: fontConfig.xxlg,
@@ -292,5 +293,5 @@ const styles = StyleSheet.create({
         paddingBottom: 50,
         marginBottom: 70,
         backgroundColor: colorList.secondary,
-    }
+    },
 });

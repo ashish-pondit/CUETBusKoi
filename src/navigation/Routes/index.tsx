@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { colorList } from '../../config';
@@ -12,9 +12,11 @@ import { getDatabase, get, ref, child } from 'firebase/database';
 import Wrongpage from '../../screens/Wrongpage';
 import Loadingpage from '../../component/Loadingpage';
 
+import NetInfo from '@react-native-community/netinfo';
 import HomeStack from '../HomeStack';
 
 function Routes() {
+    const [noInternet, setNotInternet] = React.useState(false);
     const [schedule, setschedule] = React.useState({
         ack: 0,
         nextSchedule: { start: 0, end: 0 },
@@ -91,22 +93,33 @@ function Routes() {
     }
 
     React.useEffect(() => {
-        get(child(ref(getDatabase(Firebase)), 'schedule/')).then(snapshot => {
-            var data = snapshot.val();
-
-            console.log('getting data from firebase');
-            console.log(data);
-            // console.log(JSON.parse(data));
-            console.log(data['saturday']);
-            // console.log(JSON.parse(data['saturday']));
-            saturday = JSON.parse(data['saturday']);
-            weekday = JSON.parse(data['weekday']);
-
-            check_schedule();
+        const unsubscribe = NetInfo.addEventListener(state => {
+            setNotInternet(!state.isConnected);
         });
+        return () => unsubscribe();
+    });
+
+    React.useEffect(() => {
+        get(child(ref(getDatabase(Firebase)), 'schedule/'))
+            .then(snapshot => {
+                var data = snapshot.val();
+
+                console.log('getting data from firebase');
+                console.log(data);
+                // console.log(JSON.parse(data));
+                console.log(data['saturday']);
+                // console.log(JSON.parse(data['saturday']));
+                saturday = JSON.parse(data['saturday']);
+                weekday = JSON.parse(data['weekday']);
+
+                check_schedule();
+            })
+            .catch(function (error) {
+                console.error('Can not connect to firebase');
+            });
         console.log('checking schedule again');
         console.log(schedule);
-    }, []);
+    }, [noInternet]);
 
     console.log('checking schedule ');
     console.log(schedule);
@@ -114,6 +127,13 @@ function Routes() {
 
     return (
         <NavigationContainer>
+            <View style={styles.warnBox}>
+                {noInternet ? (
+                    <Text style={styles.infoStyle}>
+                        Please Turn on Wifi or Mobile Data
+                    </Text>
+                ) : null}
+            </View>
             {schedule['ack'] === 1 ? (
                 <Tab.Navigator
                     initialRouteName="Homescreen"
@@ -216,6 +236,16 @@ function Routes() {
 const styles = StyleSheet.create({
     continer: {
         flex: 1,
+    },
+
+    infoStyle: {
+        alignSelf: 'center',
+        fontSize: 15,
+        color: 'black',
+        fontWeight: 'bold',
+    },
+    warnBox: {
+        backgroundColor: 'red',
     },
 });
 
