@@ -9,7 +9,8 @@ import {
     Alert,
     ToastAndroid,
     SectionList,
-    ScrollView
+    ScrollView,
+    Image,
 } from 'react-native';
 import Firebase, { fontConfig, colorList, spacing } from '../../config/index';
 import CollapsibleView from '@eliav2/react-native-collapsible-view';
@@ -42,7 +43,6 @@ const About = () => {
     }
 
     return (
-
         <SafeAreaView>
             <ScrollView>
                 <CollapsibleView
@@ -57,20 +57,34 @@ const About = () => {
                             sections={[
                                 {
                                     title: 'To View CUET Bus Location-',
-                                    data: ['You can find the list of last known locations of CUET buses in the Homepage',
+                                    data: [
+                                        'You can find the list of last known locations of CUET buses in the Homepage',
                                         'Tap on specific bus name to view the location history of that bus',
-                                        'You must have an active internet connection to view bus locations']
+                                        'Tap on the location icon to view the location on google map',
+                                        'You must have an active internet connection to view bus locations',
+                                    ],
                                 },
                                 {
                                     title: 'To Share CUET Bus Location-',
-                                    data: ['Go to the Update Location Page',
+                                    data: [
+                                        'Go to the Update Location Page',
                                         'Tap on the bus name to share its location',
                                         'To stop sharing, tap the stop button',
-                                        'You must have location sharing enabled & active internet connection to share bus location']
+                                        'You must have location sharing enabled & active internet connection to share bus location',
+                                    ],
                                 },
                             ]}
-                            renderItem={({ item }) => <Text style={styles.howtoStyle}>{'\u2023' + ' '} {item}</Text>}
-                            renderSectionHeader={({ section }) => <Text style={styles.devName}>{'\u25AA' + ' '}{section.title} </Text>}
+                            renderItem={({ item }) => (
+                                <Text style={styles.howtoStyle}>
+                                    {'\u2023' + ' '} {item}
+                                </Text>
+                            )}
+                            renderSectionHeader={({ section }) => (
+                                <Text style={styles.devName}>
+                                    {'\u25AA' + ' '}
+                                    {section.title}{' '}
+                                </Text>
+                            )}
                         />
                     </View>
                 </CollapsibleView>
@@ -80,17 +94,43 @@ const About = () => {
                     arrowStyling={styles.arrowStyle}
                     touchableWrapperStyle={styles.wrapperStyle}
                     collapsibleContainerStyle={{}}
-                    title={<Text style={styles.titleStyle}>Developer Info</Text>}
+                    title={
+                        <Text style={styles.titleStyle}>Developer Info</Text>
+                    }
                 >
                     <View style={{ paddingLeft: 15, paddingBottom: 10 }}>
                         <SectionList
                             sections={[
-                                { title: 'Md. Nahidul Islam Opu', data: ['CSE \'16, CUET', 'Email: opu.nahidul@gmail.com'] },
-                                { title: 'Ashish Pondit', data: ['CSE \'16, CUET', 'Email: ashishpondit@gmail.com'] },
-                                { title: 'Muhammad Eshaque Ali Rukon', data: ['CSE \'16, CUET', 'Email: rukon219@yahoo.com'] }
+                                {
+                                    title: 'Md. Nahidul Islam Opu',
+                                    data: [
+                                        "CSE '16, CUET",
+                                        'Email: opu.nahidul@gmail.com',
+                                    ],
+                                },
+                                {
+                                    title: 'Ashish Pondit',
+                                    data: [
+                                        "CSE '16, CUET",
+                                        'Email: ashishpondit@gmail.com',
+                                    ],
+                                },
+                                {
+                                    title: 'Muhammad Eshaque Ali Rukon',
+                                    data: [
+                                        "CSE '16, CUET",
+                                        'Email: rukon219@yahoo.com',
+                                    ],
+                                },
                             ]}
-                            renderItem={({ item }) => <Text style={{}}>{item}</Text>}
-                            renderSectionHeader={({ section }) => <Text style={styles.devName}>{section.title}</Text>}
+                            renderItem={({ item }) => (
+                                <Text style={{}}>{item}</Text>
+                            )}
+                            renderSectionHeader={({ section }) => (
+                                <Text style={styles.devName}>
+                                    {section.title}
+                                </Text>
+                            )}
                         />
                     </View>
                 </CollapsibleView>
@@ -117,7 +157,9 @@ const About = () => {
                             styles.textInputStyle,
                             {
                                 borderColor:
-                                    feedback == '' && submitted ? 'red' : 'black',
+                                    feedback == '' && submitted
+                                        ? 'red'
+                                        : 'black',
                                 marginBottom: 2,
                             },
                         ]}
@@ -144,6 +186,19 @@ const About = () => {
                             onPress={submitFeedback}
                         />
                     </View>
+                </CollapsibleView>
+
+                <CollapsibleView
+                    style={styles.container}
+                    arrowStyling={styles.arrowStyle}
+                    touchableWrapperStyle={styles.wrapperStyle}
+                    collapsibleContainerStyle={{}}
+                    title={<Text style={styles.titleStyle}>Bus Schedule</Text>}
+                >
+                    <Image
+                        style={styles.soon}
+                        source={require('../../assets/coming_soon.png')}
+                    />
                 </CollapsibleView>
             </ScrollView>
         </SafeAreaView>
@@ -175,7 +230,7 @@ const styles = StyleSheet.create({
     wrapperStyle: {
         //backgroundColor: 'black',
         paddingLeft: 10,
-        paddingRight: 10
+        paddingRight: 10,
     },
     textInputStyle: {
         margin: 10,
@@ -194,7 +249,6 @@ const styles = StyleSheet.create({
     buttonStyle: {
         marginTop: 20,
         padding: 10,
-
     },
     devName: {
         fontWeight: 'bold',
@@ -209,7 +263,11 @@ const styles = StyleSheet.create({
     howtoStyle: {
         paddingLeft: spacing.xlg,
         marginTop: spacing.sm,
-    }
+    },
+    soon: {
+        height: 200,
+        width: 200,
+        margin: spacing.lg,
+        alignSelf: 'center',
+    },
 });
-
-

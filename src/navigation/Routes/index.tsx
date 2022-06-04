@@ -23,8 +23,8 @@ function Routes() {
     });
     const [inSchedule, setInSchedule] = React.useState(false);
 
-    var daynum = new Date().getDay();
-    var dayhour = new Date().getHours();
+    var daynum = 1; //new Date().getDay();
+    var dayhour = 21; //new Date().getHours();
 
     var saturday = null;
     var weekday = null;
@@ -60,6 +60,15 @@ function Routes() {
                         },
                     });
                     break;
+                } else {
+                    setInSchedule(false);
+                    setschedule({
+                        ack: 1,
+                        nextSchedule: {
+                            start: 0,
+                            end: 0,
+                        },
+                    });
                 }
             }
         } else if (daynum === 6) {
@@ -78,17 +87,37 @@ function Routes() {
                             end: saturday[i]['end'],
                         },
                     });
+                    break;
                 } else if (dayhour < saturday[i]['start']) {
                     setInSchedule(false);
                     setschedule({
-                        ack: 0,
+                        ack: 1,
                         nextSchedule: {
                             start: saturday[i]['start'],
                             end: saturday[i]['end'],
                         },
                     });
+                } else {
+                    setInSchedule(false);
+                    setschedule({
+                        ack: 1,
+                        nextSchedule: {
+                            start: 0,
+                            end: 0,
+                        },
+                    });
                 }
             }
+        } else {
+            console.log('Yeah yeah yeah');
+            setInSchedule(false);
+            setschedule({
+                ack: 1,
+                nextSchedule: {
+                    start: 0,
+                    end: 0,
+                },
+            });
         }
     }
 
@@ -213,7 +242,7 @@ function Routes() {
                         <Tab.Screen
                             name="Wrong"
                             component={Wrongpage}
-                            options={{ title: 'unscheduled time' }}
+                            options={{ title: 'মামা, এখন বাস নাই!' }}
                             initialParams={schedule}
                         />
                     )}
