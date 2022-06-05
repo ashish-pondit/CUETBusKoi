@@ -23,8 +23,8 @@ function Routes() {
     });
     const [inSchedule, setInSchedule] = React.useState(false);
 
-    var daynum = 1; //new Date().getDay();
-    var dayhour = 21; //new Date().getHours();
+    var daynum = new Date().getDay();
+    var dayhour = new Date().getHours();
 
     var saturday = null;
     var weekday = null;
